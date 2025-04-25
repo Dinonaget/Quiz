@@ -1,5 +1,5 @@
 package src;
 
 public class Main {
-  sout "Hello Word"
+  sout "Hello Word!"
 }
