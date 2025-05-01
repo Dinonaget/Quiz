@@ -1,0 +1,7 @@
+Question: Wie viele Planeten hat das Sonnensystem?
+1. 5
+2. 8
+3. 7
+4. 9
+Correct Answer Index: 2
+----
