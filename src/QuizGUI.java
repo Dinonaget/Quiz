@@ -23,7 +23,7 @@ public class QuizGUI {
 
 
 
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       // mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(800, 600);
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setVisible(true);
