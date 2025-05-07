@@ -3,6 +3,8 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.*;
+import org.json.JSONObject;
 
 public class LoginGUI extends JFrame {
 
@@ -95,32 +97,19 @@ public class LoginGUI extends JFrame {
             String benutzer = userField.getText();
             String passwort = new String(passField.getPassword());
 
-            if (!benutzerDatenbank.containsKey(benutzer)) {
+            // Benutzerdaten aus der users.txt-Datei lesen
+            String gespeichertesPasswort = getBenutzerPasswort(benutzer);
+            if (gespeichertesPasswort == null) {
                 JOptionPane.showMessageDialog(this, "Benutzer existiert nicht. Bitte registrieren.");
             } else {
-                String gespeichertesPasswort = benutzerDatenbank.get(benutzer);
-                if (gespeichertesPasswort.equals(passwort)) {
+                String entschlüsseltesPasswort = decryptPassword(gespeichertesPasswort);
+                if (entschlüsseltesPasswort.equals(passwort)) {
                     JOptionPane.showMessageDialog(this, "Login erfolgreich!");
                     new QuizSelection();
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Falsches Passwort!");
                 }
-            }
-        });
-
-        // ActionListener für Registrierung
-        registrierButton.addActionListener((ActionEvent e) -> {
-            String neuerBenutzer = userField.getText();
-            String neuesPasswort = new String(passField.getPassword());
-
-            if (benutzerDatenbank.containsKey(neuerBenutzer)) {
-                JOptionPane.showMessageDialog(this, "Benutzername existiert bereits.");
-            } else if (neuerBenutzer.isEmpty() || neuesPasswort.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Bitte Benutzername und Passwort eingeben.");
-            } else {
-                benutzerDatenbank.put(neuerBenutzer, neuesPasswort);
-                JOptionPane.showMessageDialog(this, "Registrierung erfolgreich!");
             }
         });
     }
@@ -134,8 +123,43 @@ public class LoginGUI extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
     }
 
-    // Datenbank-Platzhalter (zur Kompilierung)
-    private static final java.util.HashMap<String, String> benutzerDatenbank = new java.util.HashMap<>();
+    /**
+     * Liest das verschlüsselte Passwort eines Benutzers aus der users.txt-Datei.
+     */
+    private String getBenutzerPasswort(String benutzer) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Zeile als JSON parsen
+                JSONObject user = new JSONObject(line);
+
+                String username = user.getString("username");
+                String password = user.getString("password");
+
+                // Vergleiche Benutzernamen
+                if (username.equals(benutzer)) {
+                    return password;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Entschlüsselt das Passwort, das aus der users.txt-Datei gelesen wurde.
+     */
+    private String decryptPassword(String encryptedPassword) {
+        StringBuilder decryptedPassword = new StringBuilder();
+        String[] values = encryptedPassword.split(" ");
+        for (String value : values) {
+            int decodedValue = Integer.parseInt(value);
+            decodedValue = ((decodedValue >> 5) ^ (decodedValue << 3)) % 256; // Entschlüsselungs-Logik
+            decryptedPassword.append((char) decodedValue);
+        }
+        return decryptedPassword.toString();
+    }
 
     // Einstiegspunkt
     public static void main(String[] args) {
