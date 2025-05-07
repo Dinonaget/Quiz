@@ -1,13 +1,12 @@
 package src;
 
-import org.json.JSONObject;
-
 import java.util.Scanner;
 
 public class Correction {
-    public Correction(String[] args) {
+    public static void main(String[] args) {
         QuestionCorrection question = new QuestionCorrection("How many planets are there in our solar system?", "8");
-        checkAnswer(question);
+        Correction correction = new Correction();
+        correction.checkAnswer(question);
     }
 
     private boolean answered = false;
@@ -43,14 +42,5 @@ public class Correction {
 
         answered = true;
         scanner.close();
-    }
-
-    private int getCorrectAnswer() {
-        Scanner reader = new Scanner("questions.txt");
-        String line = reader.nextLine();
-
-        JSONObject obj = new JSONObject(line);
-
-        return (int) obj.get("correct");
     }
 }
