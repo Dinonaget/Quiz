@@ -119,7 +119,7 @@ public class QuizGUI extends JFrame {
 
     private void showResult() {
         JOptionPane.showMessageDialog(this, "✅ Du hast " + score + " von " + questionsList.size() + " richtig!");
-        System.exit(0); // Beende das Programm
+        dispose(); // Schließt nur das aktuelle Fenster
     }
 
     private void loadQuestionsFromFile(String filename) {
