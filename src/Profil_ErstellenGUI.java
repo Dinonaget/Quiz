@@ -1,28 +1,27 @@
 package src;
 
+import org.json.JSONObject;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Profil_ErstellenGUI extends JFrame {
 
     public Profil_ErstellenGUI() {
-        // Titel setzen
         setTitle("Profil erstellen");
-
-        // Fenster-Einstellungen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 200);
         setLocationRelativeTo(null);
-
-        // Layout setzen
         setLayout(new GridBagLayout());
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Benutzername
+        // Benutzername-Feld
         JLabel userLabel = new JLabel("Benutzername:");
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -33,7 +32,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridy = 0;
         add(userField, gbc);
 
-        // Passwort
+        // Passwort-Feld
         JLabel passLabel = new JLabel("Passwort:");
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -44,25 +43,59 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridy = 1;
         add(passField, gbc);
 
-        // Bestätigen-Button
+        // Button zum Bestätigen
         JButton confirmButton = new JButton("Bestätigen");
         gbc.gridx = 1;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         add(confirmButton, gbc);
 
-        // Anzeigen
         setVisible(true);
 
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                QuizSelection gui = new QuizSelection();
+        // Aktion bei Button-Klick
+        confirmButton.addActionListener(e -> {
+            String username = userField.getText();
+            String rawPassword = new String(passField.getPassword());
+            String encryptedPassword = encryption(rawPassword);
+
+            try {
+                writeUser("users.txt", username, encryptedPassword);
+            } catch (IOException ex) {
+                ex.printStackTrace(); // Fehlerausgabe (keine Dialogbox)
             }
+
+            new QuizSelection(); // Weiter zur nächsten GUI
+            dispose(); // Aktuelles Fenster schließen
         });
     }
 
+    /**
+     * Speichert Username und verschlüsseltes Passwort als JSON-Zeile in einer Datei.
+     */
+    public static void writeUser(String filename, String username, String encryptedPassword) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            JSONObject obj = new JSONObject();
+            obj.put("username", username);
+            obj.put("password", encryptedPassword);
+            writer.write(obj.toString());
+            writer.newLine();
+        }
+    }
+
+    /**
+     * Verschlüsselt einen String durch Bitoperationen und gibt Zahlenfolge zurück.
+     */
+    public static String encryption(String text) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < text.length(); i++) {
+            int value = (int) text.charAt(i);
+            value = ((value << 5) ^ (value >> 3)) % 256;
+            result.append(value).append(" ");
+        }
+        return result.toString().trim();
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Profil_ErstellenGUI());
+        SwingUtilities.invokeLater(Profil_ErstellenGUI::new);
     }
 }
