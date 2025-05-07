@@ -35,7 +35,6 @@ public class QuizGUI extends JFrame {
 
     private void setupGUI() {
         setTitle("Quiz App"); // Setze den Titel des Fensters
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Beende das Programm beim Schließen
         setSize(500, 300); // Fenstergröße
         setLocationRelativeTo(null); // Fenster zentrieren
         setLayout(new BorderLayout()); // Layout des Fensters
