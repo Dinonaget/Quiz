@@ -33,20 +33,31 @@ public class Profil_ErstellenGUI extends JFrame {
         add(userField, gbc);
 
         // Passwort-Feld
-        JLabel passLabel = new JLabel("Passwort:");
+        JLabel pass1Label = new JLabel("Passwort:");
         gbc.gridx = 0;
         gbc.gridy = 1;
-        add(passLabel, gbc);
+        add(pass1Label, gbc);
 
-        JPasswordField passField = new JPasswordField(20);
+        JPasswordField pass1Field = new JPasswordField(20);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        add(passField, gbc);
+        add(pass1Field, gbc);
+
+        // Passwort-Feld
+        JLabel pass2Label = new JLabel("Passwort:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        add(pass2Label, gbc);
+
+        JPasswordField pass2Field = new JPasswordField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        add(pass2Field, gbc);
 
         // Button zum Bestätigen
         JButton confirmButton = new JButton("Bestätigen");
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.CENTER;
         add(confirmButton, gbc);
 
@@ -55,17 +66,22 @@ public class Profil_ErstellenGUI extends JFrame {
         // Aktion bei Button-Klick
         confirmButton.addActionListener(e -> {
             String username = userField.getText();
-            String rawPassword = new String(passField.getPassword());
-            String encryptedPassword = encryption(rawPassword);
+            String raw1Password = new String(pass1Field.getPassword());
+            String raw2Password = new String(pass2Field.getPassword());
+            if (raw1Password.equals(raw2Password)) {
+                String encryptedPassword = encryption(raw1Password);
+                try {
+                    writeUser("users.txt", username, encryptedPassword);
+                } catch (IOException ex) {
+                    ex.printStackTrace(); // Fehlerausgabe (keine Dialogbox)
+                }
 
-            try {
-                writeUser("users.txt", username, encryptedPassword);
-            } catch (IOException ex) {
-                ex.printStackTrace(); // Fehlerausgabe (keine Dialogbox)
+                new QuizSelection(); // Weiter zur nächsten GUI
+                dispose(); // Aktuelles Fenster schließen
+            }else {
+                JOptionPane.showMessageDialog(this, "Passwörter müssen übereinstimmen!");
             }
 
-            new QuizSelection(); // Weiter zur nächsten GUI
-            dispose(); // Aktuelles Fenster schließen
         });
     }
 

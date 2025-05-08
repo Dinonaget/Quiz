@@ -112,6 +112,11 @@ public class LoginGUI extends JFrame {
                 }
             }
         });
+
+        passwortVergessenButton.addActionListener((ActionEvent e) -> {
+            new NeuesPasswort();
+            dispose();
+        });
     }
 
     // Hilfsmethode zur Button-Gestaltung
