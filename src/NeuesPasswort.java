@@ -1,7 +1,5 @@
 package src;
 
-import org.json.JSONObject;
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -83,12 +81,12 @@ public class NeuesPasswort extends JFrame {
 
             String encryptedPassword = encryption(raw1Password);
             try {
-                boolean updated = updateUserPassword("users.txt", username, encryptedPassword);
+                boolean updated = updateUserPassword("C:/temp/Quiz/users.txt", username, encryptedPassword);
                 if (updated) {
                     JOptionPane.showMessageDialog(this, "Passwort erfolgreich geändert.");
                     new QuizSelection(); // Zur nächsten GUI wechseln
                     dispose(); // Aktuelles Fenster schließen
-                } // Sonst wurde bereits eine Fehlermeldung angezeigt
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Fehler beim Speichern!");
@@ -102,23 +100,25 @@ public class NeuesPasswort extends JFrame {
      * Zeigt Fehlermeldung, wenn Benutzer nicht existiert.
      */
     public static boolean updateUserPassword(String filename, String username, String encryptedPassword) throws IOException {
-        File file = new File(filename);
+        String filePath = "C:/temp/Quiz/users.txt";
+        File file = new File(filePath);
         if (!file.exists()) {
             JOptionPane.showMessageDialog(null, "Benutzerdatenbank nicht gefunden!", "Fehler", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
-        List<String> lines = Files.readAllLines(Paths.get(filename));
+        List<String> lines = Files.readAllLines(Paths.get(filePath));
         boolean userFound = false;
         List<String> updatedLines = new ArrayList<>();
 
         for (String line : lines) {
-            JSONObject obj = new JSONObject(line);
-            if (obj.getString("username").equals(username)) {
-                obj.put("password", encryptedPassword); // Passwort aktualisieren
+            String[] parts = line.split(":", 2);
+            if (parts.length == 2 && parts[0].equals(username)) {
+                updatedLines.add(username + ":" + encryptedPassword); // Passwort aktualisieren
                 userFound = true;
+            } else {
+                updatedLines.add(line);
             }
-            updatedLines.add(obj.toString());
         }
 
         if (!userFound) {
@@ -126,7 +126,7 @@ public class NeuesPasswort extends JFrame {
             return false;
         }
 
-        Files.write(Paths.get(filename), updatedLines);
+        Files.write(Paths.get(filePath), updatedLines);
         return true;
     }
 

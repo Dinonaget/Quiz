@@ -132,18 +132,16 @@ public class LoginGUI extends JFrame {
      * Liest das verschlüsselte Passwort eines Benutzers aus der users.txt-Datei.
      */
     private String getBenutzerPasswort(String benutzer) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:/temp/Quiz/users.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Zeile als JSON parsen
-                JSONObject user = new JSONObject(line);
-
-                String username = user.getString("username");
-                String password = user.getString("password");
-
-                // Vergleiche Benutzernamen
-                if (username.equals(benutzer)) {
-                    return password;
+                String[] parts = line.split(":", 2);
+                if (parts.length == 2) {
+                    String username = parts[0];
+                    String password = parts[1];
+                    if (username.equals(benutzer)) {
+                        return password;
+                    }
                 }
             }
         } catch (IOException e) {

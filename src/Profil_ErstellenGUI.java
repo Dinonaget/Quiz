@@ -86,14 +86,11 @@ public class Profil_ErstellenGUI extends JFrame {
     }
 
     /**
-     * Speichert Username und verschlüsseltes Passwort als JSON-Zeile in einer Datei.
+     * Speichert Username und verschlüsseltes Passwort als Textzeile in einer Datei.
      */
     public static void writeUser(String filename, String username, String encryptedPassword) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-            JSONObject obj = new JSONObject();
-            obj.put("username", username);
-            obj.put("password", encryptedPassword);
-            writer.write(obj.toString());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:/temp/Quiz/users.txt", true))) {
+            writer.write(username + ":" + encryptedPassword);
             writer.newLine();
         }
     }
