@@ -5,11 +5,11 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuizGUI extends JFrame {
     private ArrayList<Questions> questionsList = new ArrayList<>(); // Liste der Fragen
@@ -78,9 +78,8 @@ public class QuizGUI extends JFrame {
         questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion()); // Zeige die Frage an
 
         // Setze die Antwortmöglichkeiten
-        String[] answers = q.getAnswers();
-        for (int i = 0; i < answers.length; i++) {
-            options[i].setText(answers[i]);
+        for (int i = 0; i < q.getAnswers().size(); i++) {
+            options[i].setText(q.getAnswers().get(i));
             options[i].setSelected(false); // Setze alle Radiobuttons auf nicht ausgewählt
         }
     }
@@ -147,7 +146,7 @@ public class QuizGUI extends JFrame {
                     }
 
                     // Erstelle eine neue Frage und füge sie der Liste hinzu
-                    Questions q = new Questions(question, answers, correct);
+                    Questions q = new Questions(question, (ArrayList<String>) List.of(answers), correct);
                     questionsList.add(q);
                 } catch (Exception e) {
                     System.out.println("⚠️ Ungültige Zeile in questions.txt übersprungen:\n" + line);

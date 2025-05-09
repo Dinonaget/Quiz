@@ -6,7 +6,9 @@ import org.json.JSONObject;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * The {@code Questions} class represents a multiple-choice question with a set of possible answers
@@ -14,7 +16,7 @@ import java.util.Arrays;
  */
 public class Questions {
     private String question;
-    private String[] answers = new String[4];
+    private ArrayList<String> answers;
     private int correctIndex;
 
     /**
@@ -24,7 +26,7 @@ public class Questions {
      * @param answers      an array of four possible answers
      * @param correctIndex the index of the correct answer (0-based)
      */
-    public Questions(String question, String[] answers, int correctIndex) {
+    public Questions(String question, ArrayList<String> answers, int correctIndex) {
         this.question = question;
         this.answers = answers;
         this.correctIndex = correctIndex;
@@ -44,7 +46,7 @@ public class Questions {
      *
      * @return the answers
      */
-    public String[] getAnswers() {
+    public ArrayList<String> getAnswers() {
         return answers;
     }
 
@@ -72,10 +74,10 @@ public class Questions {
 
             JSONArray answer = new JSONArray();
 
-            answer.put(answers[0]);
-            answer.put(answers[1]);
-            answer.put(answers[2]);
-            answer.put(answers[3]);
+            answer.put(answers);
+            answer.put(answers);
+            answer.put(answers);
+            answer.put(answers);
 
             obj.put("answers", answer);
 
@@ -96,8 +98,23 @@ public class Questions {
     public String toString() {
         return "Questions{" +
                 "question='" + question + '\'' +
-                ", answers=" + Arrays.toString(answers) +
+                ", answers=" + Arrays.toString(new List[]{answers}) +
                 ", correctIndex=" + correctIndex +
                 '}';
     }
+
+    public String formatToLine() {
+        return question + ";" + String.join(",", answers) + ";" + correctIndex;
+    }
+
+    public static Questions fromLine(String line) {
+        String[] parts = line.split(";");
+        String question = parts[0];
+        ArrayList<String> answers = new ArrayList<>(List.of(parts[1].split(",")));
+        int correct = Integer.parseInt(parts[2]);
+        return new Questions(question, answers, correct);
+    }
+
+    public int getCorrectAnswer() { return correctIndex; }
+
 }

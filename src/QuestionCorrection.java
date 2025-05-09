@@ -12,5 +12,4 @@ public class QuestionCorrection {
     public boolean isCorrect(String userAnswer) {
         return userAnswer != null && userAnswer.equalsIgnoreCase(correctAnswer);
     }
-
 }
