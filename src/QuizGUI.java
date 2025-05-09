@@ -1,11 +1,7 @@
 package src;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -122,40 +118,51 @@ public class QuizGUI extends JFrame {
         System.exit(0); // Beende das Programm
     }
 
+    /**
+     * Lädt Fragen aus einer Textdatei im Verzeichnis {@code C:/temp/Quiz} und speichert sie in der internen Liste.
+     *
+     * <p>Die Datei muss das folgende Format haben, wobei jede Frage genau 6 Zeilen einnimmt:</p>
+     * <ol>
+     *     <li>Fragetext</li>
+     *     <li>Antwort 1</li>
+     *     <li>Antwort 2</li>
+     *     <li>Antwort 3</li>
+     *     <li>Antwort 4</li>
+     *     <li>Index der richtigen Antwort (0-basiert)</li>
+     * </ol>
+     *
+     * <p>Falls der Index ungültig ist oder ein Formatfehler vorliegt, wird die betreffende Frage übersprungen.</p>
+     *
+     * @param filename Der Name der Datei (z. B. {@code "questions.txt"}), die sich im Verzeichnis {@code C:/temp/Quiz} befindet.
+     */
     private void loadQuestionsFromFile(String filename) {
+        String fullPath = "C:/temp/Quiz/" + filename; // Absoluter Pfad zur Datei
         try {
-            // Lese alle Zeilen der Datei
-            for (String line : Files.readAllLines(Paths.get(filename))) {
-                try {
-                    // Parse jede Zeile als JSON
-                    JSONObject obj = new JSONObject(line);
-
-                    String question = obj.getString("question");
-                    JSONArray answersJSON = obj.getJSONArray("answers");
-                    int correct = obj.getInt("correct");
-
-                    // Überprüfe, ob genau 4 Antworten vorhanden sind
-                    if (answersJSON.length() != 4) {
-                        System.out.println("⚠️ Frage übersprungen (nicht genau 4 Antworten): " + line);
-                        continue; // Überspringe diese Frage, wenn sie nicht korrekt ist
-                    }
-
-                    // Speichere die Antworten in einem Array
-                    String[] answers = new String[4];
-                    for (int i = 0; i < 4; i++) {
-                        answers[i] = answersJSON.getString(i);
-                    }
-
-                    // Erstelle eine neue Frage und füge sie der Liste hinzu
-                    Questions q = new Questions(question, answers, correct);
-                    questionsList.add(q);
-                } catch (Exception e) {
-                    System.out.println("⚠️ Ungültige Zeile in questions.txt übersprungen:\n" + line);
+            java.util.List<String> lines = Files.readAllLines(Paths.get(fullPath));
+            for (int i = 0; i + 5 < lines.size(); i += 6) {
+                String question = lines.get(i);
+                String[] answers = new String[4];
+                for (int j = 0; j < 4; j++) {
+                    answers[j] = lines.get(i + 1 + j);
                 }
+                int correct;
+                try {
+                    correct = Integer.parseInt(lines.get(i + 5));
+                    if (correct < 0 || correct > 3) {
+                        System.out.println("⚠️ Ungültiger Index bei Frage: " + question);
+                        continue;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("⚠️ Ungültiger Zahlenwert für korrekte Antwort bei Frage: " + question);
+                    continue;
+                }
+
+                Questions q = new Questions(question, answers, correct);
+                questionsList.add(q);
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "❌ Fehler beim Lesen der Datei: " + e.getMessage());
-            System.exit(1); // Beende das Programm bei Fehler
+            JOptionPane.showMessageDialog(this, "❌ Fehler beim Lesen der Datei:\n" + fullPath + "\n" + e.getMessage());
+            System.exit(1);
         }
     }
 }

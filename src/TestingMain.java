@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public class TestingMain {
     public static void main(String[] args) {
-        String[] ar = new String[]{"5", "8", "7", "9"};
-        Questions a = new Questions("Wie viele Planeten hat das Sonnensystem?",ar,2);
+        String[] ar = new String[]{"3", "4", "5", "6"};
+        Questions a = new Questions("Was ist 2+2?",ar,1);
         System.out.println(a.toString());
         try {
             a.writeToFile("questions.txt");

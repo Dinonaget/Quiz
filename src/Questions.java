@@ -58,46 +58,49 @@ public class Questions {
     }
 
     /**
-     * Schreibt die Frage, ihre Antworten und den Index der richtigen Antwort in eine Datei im JSON-Format.
+     * Schreibt die Frage, ihre vier Antwortmöglichkeiten und den Index der korrekten Antwort
+     * als einfache Textzeilen in eine Datei im Verzeichnis {@code C:/temp/Quiz}.
      *
-     * <p>Die Datei wird im Anfügemodus geöffnet, sodass neue Einträge nicht vorhandene überschreiben.</p>
+     * <p>Die Datei wird im Anfügemodus geöffnet, sodass neue Fragen am Ende hinzugefügt werden,
+     * ohne vorhandene zu überschreiben. Jede Frage wird dabei in sechs Zeilen geschrieben:
+     * <ol>
+     *     <li>Die Frage selbst</li>
+     *     <li>Antwort 1</li>
+     *     <li>Antwort 2</li>
+     *     <li>Antwort 3</li>
+     *     <li>Antwort 4</li>
+     *     <li>Index der richtigen Antwort (0-basiert)</li>
+     * </ol>
      *
-     * @param filename Der Name der Datei, in die geschrieben werden soll.
-     * @throws IOException Falls ein Fehler beim Datei-Schreiben auftritt.
+     * <p>Falls das Zielverzeichnis {@code C:/temp/Quiz} nicht existiert, wird es automatisch erstellt.</p>
+     *
+     * @param filename Der Name der Datei, in die geschrieben werden soll (z. B. {@code "questions.txt"}).
+     * @throws IOException Falls beim Schreiben in die Datei ein Fehler auftritt.
      */
     public void writeToFile(String filename) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-            JSONObject obj = new JSONObject();
-            obj.put("question", question);
+        // Zielverzeichnis festlegen
+        String dirPath = "C:/temp/Quiz";
+        java.nio.file.Path directory = java.nio.file.Paths.get(dirPath);
 
-            JSONArray answer = new JSONArray();
+        // Verzeichnis erstellen, falls es nicht existiert
+        if (!java.nio.file.Files.exists(directory)) {
+            java.nio.file.Files.createDirectories(directory);
+        }
 
-            answer.put(answers[0]);
-            answer.put(answers[1]);
-            answer.put(answers[2]);
-            answer.put(answers[3]);
+        // Pfad zur Datei
+        String fullPath = dirPath + "/" + filename;
 
-            obj.put("answers", answer);
-
-            obj.put("correct", correctIndex);
-
-            writer.write(obj.toString());
-
+        // Schreiben in die Datei im Anfügemodus
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fullPath, true))) {
+            writer.write(question);
+            writer.newLine();
+            for (int i = 0; i < 4; i++) {
+                writer.write(answers[i]);
+                writer.newLine();
+            }
+            writer.write(Integer.toString(correctIndex));
             writer.newLine();
         }
     }
 
-    /**
-     * Returns a string representation of this {@code Questions} object.
-     *
-     * @return a string describing the question
-     */
-    @Override
-    public String toString() {
-        return "Questions{" +
-                "question='" + question + '\'' +
-                ", answers=" + Arrays.toString(answers) +
-                ", correctIndex=" + correctIndex +
-                '}';
-    }
 }
