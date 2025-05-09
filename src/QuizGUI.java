@@ -25,7 +25,7 @@ public class QuizGUI extends JFrame {
         loadQuestionsFromFile("questions.txt"); // Lade Fragen aus der Datei
 
         if (questionsList.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "⚠️ Keine Fragen gefunden!"); // Fehler, wenn keine Fragen vorhanden sind
+            JOptionPane.showMessageDialog(this, "Keine Fragen gefunden!"); // Fehler, wenn keine Fragen vorhanden sind
             System.exit(1); // Beende das Programm
         }
 
