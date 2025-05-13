@@ -1,10 +1,18 @@
 package src;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestingMain {
     public static void main(String[] args) {
-        String[] ar = new String[]{"5", "8", "7", "9"};
+        ArrayList<String> ar = new ArrayList<>();
+
+        ar.add("7");
+        ar.add("6");
+        ar.add("5");
+        ar.add("8");
+
         Questions a = new Questions("Wie viele Planeten hat das Sonnensystem?",ar,2);
         System.out.println(a.toString());
         try {
