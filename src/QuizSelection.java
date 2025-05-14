@@ -31,8 +31,9 @@ public class QuizSelection extends JFrame {
         File quizDir = new File("C:/temp/Quiz");
         File[] files = quizDir.listFiles((dir, name) -> name.endsWith(".txt") && !name.equalsIgnoreCase("users.txt"));
 
+        int row = 1;
+
         if (files != null) {
-            int row = 1;
             for (File file : files) {
                 String fileName = file.getName();
                 String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
@@ -41,8 +42,7 @@ public class QuizSelection extends JFrame {
                 quizButton.setToolTipText("Start Quiz: " + buttonLabel);
 
                 quizButton.addActionListener((ActionEvent e) -> {
-                    // Hier könnte man z.B. den Dateinamen an QuizGUI übergeben
-                    QuizGUI quizGUI = new QuizGUI(); // evtl. Konstruktor anpassen
+                    QuizGUI quizGUI = new QuizGUI(); // Optional: Datei übergeben
                 });
 
                 gbc.gridx = 0;
@@ -52,9 +52,21 @@ public class QuizSelection extends JFrame {
         } else {
             JLabel errorLabel = new JLabel("Fehler beim Laden der Quiz-Dateien.");
             gbc.gridx = 0;
-            gbc.gridy = 1;
+            gbc.gridy = row++;
             panel.add(errorLabel, gbc);
         }
+
+        // Neuen Button zum Quiz erstellen
+        JButton erstellenButton = new JButton("Neues Quiz erstellen");
+        erstellenButton.setToolTipText("Öffnet das Fenster zum Erstellen eines neuen Quiz");
+
+        erstellenButton.addActionListener(e -> {
+            new QuizErstellenGUI();
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        panel.add(erstellenButton, gbc);
 
         frame.add(panel);
         frame.setResizable(false);
