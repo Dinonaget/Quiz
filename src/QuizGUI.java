@@ -17,8 +17,11 @@ public class QuizGUI extends JFrame {
     private ButtonGroup group; // Gruppe für die Radiobuttons
     private JButton nextButton; // Button für die nächste Frage
 
-    public QuizGUI() {
-        loadQuestionsFromFile("questions.txt"); // Lade Fragen aus der Datei
+    public QuizGUI(String filename) {
+//        loadQuestionsFromFile("questions.txt"); // Lade Fragen aus der Datei
+            loadQuestionsFromFile(filename); // statt fix "questions.txt"
+            // ... Rest bleibt gleich
+
 
         if (questionsList.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Keine Fragen gefunden!"); // Fehler, wenn keine Fragen vorhanden sind
@@ -31,7 +34,7 @@ public class QuizGUI extends JFrame {
 
     private void setupGUI() {
         setTitle("Quiz App"); // Setze den Titel des Fensters
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Beende das Programm beim Schließen
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Beende das Programm beim Schließen
         setSize(500, 300); // Fenstergröße
         setLocationRelativeTo(null); // Fenster zentrieren
         setLayout(new BorderLayout()); // Layout des Fensters
@@ -115,7 +118,7 @@ public class QuizGUI extends JFrame {
 
     private void showResult() {
         JOptionPane.showMessageDialog(this, "✅ Du hast " + score + " von " + questionsList.size() + " richtig!");
-        System.exit(0); // Beende das Programm
+        dispose(); // Beende das Programm
     }
 
     /**

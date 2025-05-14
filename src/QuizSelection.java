@@ -33,6 +33,29 @@ public class QuizSelection extends JFrame {
 
         int row = 1;
 
+//        if (files != null) {
+//            for (File file : files) {
+//                String fileName = file.getName();
+//                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
+//
+//                JButton quizButton = new JButton(buttonLabel);
+//                quizButton.setToolTipText("Start Quiz: " + buttonLabel);
+//
+//                quizButton.addActionListener((ActionEvent e) -> {
+//                    QuizGUI quizGUI = new QuizGUI(); // Optional: Datei übergeben
+//                });
+//
+//                gbc.gridx = 0;
+//                gbc.gridy = row++;
+//                panel.add(quizButton, gbc);
+//            }
+//        } else {
+//            JLabel errorLabel = new JLabel("Fehler beim Laden der Quiz-Dateien.");
+//            gbc.gridx = 0;
+//            gbc.gridy = row++;
+//            panel.add(errorLabel, gbc);
+//        }
+
         if (files != null) {
             for (File file : files) {
                 String fileName = file.getName();
@@ -42,19 +65,16 @@ public class QuizSelection extends JFrame {
                 quizButton.setToolTipText("Start Quiz: " + buttonLabel);
 
                 quizButton.addActionListener((ActionEvent e) -> {
-                    QuizGUI quizGUI = new QuizGUI(); // Optional: Datei übergeben
+                    new QuizGUI(file.getName()); // übergibt z. B. "mathe.txt"
                 });
+
 
                 gbc.gridx = 0;
                 gbc.gridy = row++;
                 panel.add(quizButton, gbc);
             }
-        } else {
-            JLabel errorLabel = new JLabel("Fehler beim Laden der Quiz-Dateien.");
-            gbc.gridx = 0;
-            gbc.gridy = row++;
-            panel.add(errorLabel, gbc);
         }
+
 
         // Neuen Button zum Quiz erstellen
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
