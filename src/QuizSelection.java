@@ -4,22 +4,15 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.io.File;
 
 public class QuizSelection extends JFrame {
     public QuizSelection() {
         JFrame frame = new JFrame("Quiz Selection");
-
-
-
-        // Create main JFrame.
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setLocationRelativeTo(null);
 
-        // Create JPanel with GridBagLayout.
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -27,72 +20,41 @@ public class QuizSelection extends JFrame {
 
         JLabel label = new JLabel("Quiz Selection");
         label.setFont(new Font("Arial", Font.BOLD, 15));
-
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         label.setBorder(border);
 
-        /*
-         * Save slot 1 for a Quiz
-         */
-        JButton quizButton = new JButton("Save slot 1");
-        quizButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                QuizGUI quizGUI = new QuizGUI();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add(label, gbc);
+
+        // Dateien im Verzeichnis C:/temp/Quiz
+        File quizDir = new File("C:/temp/Quiz");
+        File[] files = quizDir.listFiles((dir, name) -> name.endsWith(".txt") && !name.equalsIgnoreCase("users.txt"));
+
+        if (files != null) {
+            int row = 1;
+            for (File file : files) {
+                String fileName = file.getName();
+                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
+
+                JButton quizButton = new JButton(buttonLabel);
+                quizButton.setToolTipText("Start Quiz: " + buttonLabel);
+
+                quizButton.addActionListener((ActionEvent e) -> {
+                    // Hier könnte man z.B. den Dateinamen an QuizGUI übergeben
+                    QuizGUI quizGUI = new QuizGUI(); // evtl. Konstruktor anpassen
+                });
+
+                gbc.gridx = 0;
+                gbc.gridy = row++;
+                panel.add(quizButton, gbc);
             }
-        });
-        quizButton.setToolTipText("Save a Quiz");
-
-        /*
-         * Save slot 2 for a Quiz
-         */
-        JButton quizButton2 = new JButton("Saves slot 2");
-        quizButton2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                QuizGUI quizGUI = new QuizGUI();
-            }
-        });
-        quizButton2.setToolTipText("Save a Quiz");
-
-        /*
-         * Save slot 3 for a Quiz
-         */
-        JButton quizButton3= new JButton("Save slot 3");
-        quizButton3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                QuizGUI quizGUI = new QuizGUI();
-            }
-        });
-        quizButton3.setToolTipText("Save a Quiz");
-
-        /*
-         * Save slot 4 for a Quiz
-         */
-        JButton quizButton4 = new JButton("Save slot 4");
-        quizButton4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                QuizGUI quizGUI = new QuizGUI();
-            }
-        });
-        quizButton4.setToolTipText("Save a Quiz");
-
-
-
-
-        gbc.gridx = 0; gbc.gridy = 0;
-        panel.add(label);
-
-        gbc.gridx = 0; gbc.gridy = 1;
-        panel.add(quizButton, gbc);
-        gbc.gridx = 0; gbc.gridy = 2;
-        panel.add(quizButton2, gbc);
-        gbc.gridx = 0; gbc.gridy = 3;
-        panel.add(quizButton3, gbc);
-        gbc.gridx = 0; gbc.gridy = 4;
-        panel.add(quizButton4, gbc);
+        } else {
+            JLabel errorLabel = new JLabel("Fehler beim Laden der Quiz-Dateien.");
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            panel.add(errorLabel, gbc);
+        }
 
         frame.add(panel);
         frame.setResizable(false);
@@ -102,5 +64,4 @@ public class QuizSelection extends JFrame {
     private QuizSelection getQuizSelection() {
         return this;
     }
-
 }
