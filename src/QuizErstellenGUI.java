@@ -4,14 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class QuizErstellenGUI extends JFrame {
     private JTextField quizNameField, questionField;
     private JTextField[] answerField = new JTextField[4];
     private JRadioButton[] radioButtons = new JRadioButton[4];
     private ButtonGroup buttonGroup = new ButtonGroup();
-    private QuizErstellen quizManager;
+    private QuizErstellen quizManager = new QuizErstellen();
     private JTextArea statusArea;
 
     public QuizErstellenGUI() {
@@ -61,10 +60,10 @@ public class QuizErstellenGUI extends JFrame {
             String name = quizNameField.getText().trim();
             if (name.isEmpty()) {
                 zeigeStatus("Fehler: Quizname darf nicht leer sein.");
-                return;
+            } else {
+                quizManager = new QuizErstellen(); // Neue Instanz leeren
+                zeigeStatus("Neues Quiz gestartet: " + name + ".txt");
             }
-            quizManager = new QuizErstellen(name + ".txt");
-            zeigeStatus("Neues Quiz gestartet: " + name + ".txt");
         });
 
         loadButton.addActionListener(e -> {
@@ -73,9 +72,8 @@ public class QuizErstellenGUI extends JFrame {
                 zeigeStatus("Fehler: Dateiname eingeben zum Laden.");
                 return;
             }
-            quizManager = new QuizErstellen(name + ".txt");
             try {
-                quizManager.load();
+                quizManager.loadQuiz(name + ".txt");
                 zeigeStatus("Quiz geladen: " + name + ".txt");
             } catch (IOException ex) {
                 zeigeStatus("Fehler beim Laden: " + ex.getMessage());
@@ -83,10 +81,6 @@ public class QuizErstellenGUI extends JFrame {
         });
 
         addButton.addActionListener(e -> {
-            if (quizManager == null) {
-                zeigeStatus("Erst ein Quiz erstellen oder laden.");
-                return;
-            }
             String question = questionField.getText().trim();
             if (question.isEmpty()) {
                 zeigeStatus("Fragetext darf nicht leer sein.");
@@ -112,7 +106,7 @@ public class QuizErstellenGUI extends JFrame {
                 return;
             }
 
-            Questions neueFrage = new Questions(question, answers, richtige);
+            Questions neueFrage = new Questions(question, answers.toArray(new String[0]), richtige);
             quizManager.addQuestion(neueFrage);
             zeigeStatus("Frage hinzugefügt.");
             questionField.setText("");
@@ -121,13 +115,14 @@ public class QuizErstellenGUI extends JFrame {
         });
 
         saveButton.addActionListener(e -> {
-            if (quizManager == null) {
-                zeigeStatus("Kein Quiz aktiv.");
+            String name = quizNameField.getText().trim();
+            if (name.isEmpty()) {
+                zeigeStatus("Bitte Dateiname angeben.");
                 return;
             }
             try {
-                quizManager.saveQuiz();
-                zeigeStatus("Quiz gespeichert.");
+                quizManager.saveQuiz(name + ".txt");
+                zeigeStatus("Quiz gespeichert unter: C:/temp/Quiz/" + name + ".txt");
             } catch (IOException ex) {
                 zeigeStatus("Fehler beim Speichern: " + ex.getMessage());
             }
@@ -140,6 +135,3 @@ public class QuizErstellenGUI extends JFrame {
         statusArea.append(msg + "\n");
     }
 }
-
-
-

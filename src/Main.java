@@ -3,7 +3,6 @@ package src;
 public class Main {
 
     public static void main(String[] args) {
-        new QuizSelection();
-
+        LoginGUI gui = new LoginGUI();
     }
 }
