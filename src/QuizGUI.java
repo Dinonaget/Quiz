@@ -8,85 +8,76 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class QuizGUI extends JFrame {
-    private ArrayList<Questions> questionsList = new ArrayList<>(); // Liste der Fragen
-    private int currentIndex = 0; // Index der aktuellen Frage
-    private int score = 0; // Punktzahl des Benutzers
+    private ArrayList<Questions> questionsList = new ArrayList<>();
+    private int currentIndex = 0;
+    private int score = 0;
 
-    private JLabel questionLabel; // Label für die Frage
-    private JRadioButton[] options; // Radiobuttons für die Antworten
-    private ButtonGroup group; // Gruppe für die Radiobuttons
-    private JButton nextButton; // Button für die nächste Frage
+    private JLabel questionLabel;
+    private JRadioButton[] options;
+    private ButtonGroup group;
+    private JButton nextButton;
 
     public QuizGUI(String filename) {
-//        loadQuestionsFromFile("questions.txt"); // Lade Fragen aus der Datei
-            loadQuestionsFromFile(filename); // statt fix "questions.txt"
-            // ... Rest bleibt gleich
-
+        loadQuestionsFromFile(filename);
 
         if (questionsList.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Keine Fragen gefunden!"); // Fehler, wenn keine Fragen vorhanden sind
-            System.exit(1); // Beende das Programm
+            JOptionPane.showMessageDialog(this, "Keine Fragen gefunden!");
+            dispose();
+            return;
         }
 
-        setupGUI(); // Setze das GUI auf
-        showQuestion(); // Zeige die erste Frage
+        setupGUI();
+        showQuestion();
     }
 
     private void setupGUI() {
-        setTitle("Quiz App"); // Setze den Titel des Fensters
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Beende das Programm beim Schließen
-        setSize(500, 300); // Fenstergröße
-        setLocationRelativeTo(null); // Fenster zentrieren
-        setLayout(new BorderLayout()); // Layout des Fensters
+        setTitle("Quiz App");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 300);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        // Frage-Label
         questionLabel = new JLabel("Frage", SwingConstants.CENTER);
-        questionLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Schriftart
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 16));
         add(questionLabel, BorderLayout.NORTH);
 
-        // Panel für die Antworten
         JPanel optionsPanel = new JPanel(new GridLayout(4, 1));
         options = new JRadioButton[4];
-        group = new ButtonGroup(); // Gruppe für die Radiobuttons
+        group = new ButtonGroup();
 
-        // Erstelle 4 Radiobuttons für die Antworten
         for (int i = 0; i < 4; i++) {
             options[i] = new JRadioButton();
-            group.add(options[i]); // Füge den Button zur Gruppe hinzu
-            optionsPanel.add(options[i]); // Füge den Button zum Panel hinzu
+            group.add(options[i]);
+            optionsPanel.add(options[i]);
         }
 
-        add(optionsPanel, BorderLayout.CENTER); // Panel zum Fenster hinzufügen
+        add(optionsPanel, BorderLayout.CENTER);
 
-        // Button für die nächste Frage
         nextButton = new JButton("Weiter");
-        nextButton.addActionListener(e -> checkAndNext()); // Event-Listener für den Button
-        add(nextButton, BorderLayout.SOUTH); // Button zum Fenster hinzufügen
+        nextButton.addActionListener(e -> checkAndNext());
+        add(nextButton, BorderLayout.SOUTH);
 
-        setVisible(true); // Mache das Fenster sichtbar
+        setVisible(true);
     }
 
     private void showQuestion() {
         if (currentIndex >= questionsList.size()) {
-            showResult(); // Zeige das Ergebnis, wenn alle Fragen beantwortet sind
+            showResult();
             return;
         }
 
-        // Hole die aktuelle Frage
         Questions q = questionsList.get(currentIndex);
-        questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion()); // Zeige die Frage an
+        questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion());
 
-        // Setze die Antwortmöglichkeiten
         String[] answers = q.getAnswers();
         for (int i = 0; i < answers.length; i++) {
             options[i].setText(answers[i]);
-            options[i].setSelected(false); // Setze alle Radiobuttons auf nicht ausgewählt
+            options[i].setSelected(false);
         }
     }
 
     private void checkAndNext() {
         int selected = -1;
-        // Prüfe, welche Antwort ausgewählt wurde
         for (int i = 0; i < options.length; i++) {
             if (options[i].isSelected()) {
                 selected = i;
@@ -94,52 +85,28 @@ public class QuizGUI extends JFrame {
             }
         }
 
-        // Falls keine Antwort ausgewählt wurde
         if (selected == -1) {
             JOptionPane.showMessageDialog(this, "Bitte eine Antwort auswählen.");
             return;
         }
 
-        // Hole die aktuelle Frage
         Questions q = questionsList.get(currentIndex);
-        if (selected == q.getCorrectIndex()) { // Wenn die Antwort richtig war
-            score++; // Erhöhe die Punktzahl
+        if (selected == q.getCorrectIndex()) {
+            score++;
         }
 
-        currentIndex++; // Gehe zur nächsten Frage
-
-        // Überprüfe, ob das Quiz beendet ist
-        if (currentIndex >= questionsList.size()) {
-            showResult(); // Zeige das Ergebnis an
-        } else {
-            showQuestion(); // Zeige die nächste Frage
-        }
+        currentIndex++;
+        showQuestion();
     }
 
     private void showResult() {
-        JOptionPane.showMessageDialog(this, "✅ Du hast " + score + " von " + questionsList.size() + " richtig!");
-        dispose(); // Beende das Programm
+        JOptionPane.showMessageDialog(this,
+                "✅ Du hast " + score + " von " + questionsList.size() + " richtig!");
+        dispose();
     }
 
-    /**
-     * Lädt Fragen aus einer Textdatei im Verzeichnis {@code C:/temp/Quiz} und speichert sie in der internen Liste.
-     *
-     * <p>Die Datei muss das folgende Format haben, wobei jede Frage genau 6 Zeilen einnimmt:</p>
-     * <ol>
-     *     <li>Fragetext</li>
-     *     <li>Antwort 1</li>
-     *     <li>Antwort 2</li>
-     *     <li>Antwort 3</li>
-     *     <li>Antwort 4</li>
-     *     <li>Index der richtigen Antwort (0-basiert)</li>
-     * </ol>
-     *
-     * <p>Falls der Index ungültig ist oder ein Formatfehler vorliegt, wird die betreffende Frage übersprungen.</p>
-     *
-     * @param filename Der Name der Datei (z. B. {@code "questions.txt"}), die sich im Verzeichnis {@code C:/temp/Quiz} befindet.
-     */
     private void loadQuestionsFromFile(String filename) {
-        String fullPath = "C:/temp/Quiz/" + filename; // Absoluter Pfad zur Datei
+        String fullPath = "C:/temp/Quiz/" + filename;
         try {
             java.util.List<String> lines = Files.readAllLines(Paths.get(fullPath));
             for (int i = 0; i + 5 < lines.size(); i += 6) {
@@ -151,12 +118,8 @@ public class QuizGUI extends JFrame {
                 int correct;
                 try {
                     correct = Integer.parseInt(lines.get(i + 5));
-                    if (correct < 0 || correct > 3) {
-                        System.out.println("⚠️ Ungültiger Index bei Frage: " + question);
-                        continue;
-                    }
+                    if (correct < 0 || correct > 3) continue;
                 } catch (NumberFormatException e) {
-                    System.out.println("⚠️ Ungültiger Zahlenwert für korrekte Antwort bei Frage: " + question);
                     continue;
                 }
 
@@ -165,7 +128,6 @@ public class QuizGUI extends JFrame {
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "❌ Fehler beim Lesen der Datei:\n" + fullPath + "\n" + e.getMessage());
-            System.exit(1);
         }
     }
 }

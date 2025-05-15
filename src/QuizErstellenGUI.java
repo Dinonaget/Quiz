@@ -69,16 +69,19 @@ public class QuizErstellenGUI extends JFrame {
         loadButton.addActionListener(e -> {
             String name = quizNameField.getText().trim();
             if (name.isEmpty()) {
-                zeigeStatus("Fehler: Dateiname eingeben zum Laden.");
+                zeigeStatus("Dateiname eingeben zum Laden.");
                 return;
             }
+
+            String fullFilename = name + "." + Session.getUsername() + ".txt";
             try {
-                quizManager.loadQuiz(name + ".txt");
-                zeigeStatus("Quiz geladen: " + name + ".txt");
+                quizManager.loadQuiz(fullFilename);
+                zeigeStatus("Quiz geladen: " + fullFilename);
             } catch (IOException ex) {
                 zeigeStatus("Fehler beim Laden: " + ex.getMessage());
             }
         });
+
 
         addButton.addActionListener(e -> {
             String question = questionField.getText().trim();
@@ -120,13 +123,16 @@ public class QuizErstellenGUI extends JFrame {
                 zeigeStatus("Bitte Dateiname angeben.");
                 return;
             }
+
+            String fullFilename = name + "." + Session.getUsername() + ".txt";
             try {
-                quizManager.saveQuiz(name + ".txt");
-                zeigeStatus("Quiz gespeichert unter: C:/temp/Quiz/" + name + ".txt");
+                quizManager.saveQuiz(fullFilename);
+                zeigeStatus("Quiz gespeichert unter: C:/temp/Quiz/" + fullFilename);
             } catch (IOException ex) {
                 zeigeStatus("Fehler beim Speichern: " + ex.getMessage());
             }
         });
+
 
         setVisible(true);
     }

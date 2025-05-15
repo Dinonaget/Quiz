@@ -105,6 +105,7 @@ public class LoginGUI extends JFrame {
                 String entschlüsseltesPasswort = decryptPassword(gespeichertesPasswort);
                 if (entschlüsseltesPasswort.equals(passwort)) {
                     JOptionPane.showMessageDialog(this, "Login erfolgreich!");
+                    Session.login(benutzer);
                     new QuizSelection();
                     dispose();
                 } else {
