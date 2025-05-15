@@ -3,15 +3,15 @@ package src;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 
 public class QuizSelection extends JFrame {
+
     public QuizSelection() {
-        JFrame frame = new JFrame("Quiz Selection");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-        frame.setLocationRelativeTo(null);
+        super("Quiz Selection");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 450);
+        setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -27,47 +27,32 @@ public class QuizSelection extends JFrame {
         gbc.gridy = 0;
         panel.add(label, gbc);
 
-        // Dateien im Verzeichnis C:/temp/Quiz
+        // Dropdown (ComboBox) zum Thema-Auswählen
+        String[] themes = {"Flat Light", "Flat Dark", "Flat Nord", "Flat Dracula"};
+        JComboBox<String> themeComboBox = new JComboBox<>(themes);
+        themeComboBox.setSelectedItem("Flat Nord");  // Default Theme
+
+        gbc.gridy = 1;
+        panel.add(themeComboBox, gbc);
+
+        themeComboBox.addActionListener(e -> {
+            String selectedTheme = (String) themeComboBox.getSelectedItem();
+            ThemeSwitcher.applyTheme(selectedTheme, this);
+        });
+
         File quizDir = new File("C:/temp/Quiz");
         File[] files = quizDir.listFiles((dir, name) -> name.endsWith(".txt") && !name.equalsIgnoreCase("users.txt"));
 
-        int row = 1;
-
-//        if (files != null) {
-//            for (File file : files) {
-//                String fileName = file.getName();
-//                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
-//
-//                JButton quizButton = new JButton(buttonLabel);
-//                quizButton.setToolTipText("Start Quiz: " + buttonLabel);
-//
-//                quizButton.addActionListener((ActionEvent e) -> {
-//                    QuizGUI quizGUI = new QuizGUI(); // Optional: Datei übergeben
-//                });
-//
-//                gbc.gridx = 0;
-//                gbc.gridy = row++;
-//                panel.add(quizButton, gbc);
-//            }
-//        } else {
-//            JLabel errorLabel = new JLabel("Fehler beim Laden der Quiz-Dateien.");
-//            gbc.gridx = 0;
-//            gbc.gridy = row++;
-//            panel.add(errorLabel, gbc);
-//        }
-
+        int row = 2;
         if (files != null) {
             for (File file : files) {
                 String fileName = file.getName();
-                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
+                String buttonLabel = fileName.substring(0, fileName.length() - 4);
 
                 JButton quizButton = new JButton(buttonLabel);
                 quizButton.setToolTipText("Start Quiz: " + buttonLabel);
 
-                quizButton.addActionListener((ActionEvent e) -> {
-                    new QuizGUI(file.getName()); // übergibt z. B. "mathe.txt"
-                });
-
+                quizButton.addActionListener(ev -> new QuizGUI(file.getName()));
 
                 gbc.gridx = 0;
                 gbc.gridy = row++;
@@ -75,25 +60,16 @@ public class QuizSelection extends JFrame {
             }
         }
 
-
-        // Neuen Button zum Quiz erstellen
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
         erstellenButton.setToolTipText("Öffnet das Fenster zum Erstellen eines neuen Quiz");
-
-        erstellenButton.addActionListener(e -> {
-            new QuizErstellenGUI();
-        });
+        erstellenButton.addActionListener(ev -> new QuizErstellenGUI());
 
         gbc.gridx = 0;
-        gbc.gridy = row++;
+        gbc.gridy = row;
         panel.add(erstellenButton, gbc);
 
-        frame.add(panel);
-        frame.setResizable(false);
-        frame.setVisible(true);
-    }
-
-    private QuizSelection getQuizSelection() {
-        return this;
+        add(panel);
+        setResizable(false);
+        setVisible(true);
     }
 }
