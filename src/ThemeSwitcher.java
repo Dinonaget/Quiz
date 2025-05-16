@@ -1,35 +1,51 @@
 package src;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
-import com.formdev.flatlaf.intellijthemes.FlatDraculaIJTheme;
 
-
+import com.formdev.flatlaf.*;
+import com.formdev.flatlaf.intellijthemes.*;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ThemeSwitcher {
 
-    public static void installThemeShortcut(JFrame rootFrame) {
-        JRootPane rootPane = rootFrame.getRootPane();
-        KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_DOWN_MASK);
-        rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, "openThemeDialog");
-        rootPane.getActionMap().put("openThemeDialog", new AbstractAction() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                showThemeDialog(rootFrame);
-            }
-        });
+    // Map zur Anzeige und Zuordnung der Themes
+    private static final Map<String, LookAndFeel> availableThemes = new LinkedHashMap<>();
+
+    static {
+        // Light Themes
+        availableThemes.put("Light/Flat Light", new FlatLightLaf());
+        availableThemes.put("Light/Arc", new FlatArcIJTheme());
+        availableThemes.put("Light/Arc - Orange", new FlatArcOrangeIJTheme());
+        availableThemes.put("Light/Cyan light", new FlatCyanLightIJTheme());
+        availableThemes.put("Light/Light Flat", new FlatLightFlatIJTheme());
+        availableThemes.put("Light/Solarized Light", new FlatSolarizedLightIJTheme());
+
+        // Dark Themes
+        availableThemes.put("Dark/Vueston", new FlatVuesionIJTheme());
+        availableThemes.put("Dark/Flat Dark", new FlatDarkLaf());
+        availableThemes.put("Dark/Arc Dark", new FlatArcDarkIJTheme());
+        availableThemes.put("Dark/Arc Dark - Orange", new FlatArcDarkOrangeIJTheme());
+        availableThemes.put("Dark/Carbon", new FlatCarbonIJTheme());
+        availableThemes.put("Dark/Cobalt 2", new FlatCobalt2IJTheme());
+        availableThemes.put("Dark/Dark Flat", new FlatDarkFlatIJTheme());
+        availableThemes.put("Dark/Dark purple", new FlatDarkPurpleIJTheme());
+        availableThemes.put("Dark/Dracula", new FlatDraculaIJTheme());
+        availableThemes.put("Dark/Gradianto Dark Fuchsia", new FlatGradiantoDarkFuchsiaIJTheme());
+        availableThemes.put("Dark/Gradianto Deep Ocean", new FlatGradiantoDeepOceanIJTheme());
+        availableThemes.put("Dark/Gradianto Midnight Blue", new FlatGradiantoMidnightBlueIJTheme());
+        availableThemes.put("Dark/High Contrast", new FlatHighContrastIJTheme());
+        availableThemes.put("Dark/Material Design Dark", new FlatMaterialDesignDarkIJTheme());
+        availableThemes.put("Dark/Monocal", new FlatMonocaiIJTheme());
+        availableThemes.put("Dark/Monokai Pro", new FlatMonokaiProIJTheme());
+        availableThemes.put("Dark/Nord", new FlatNordIJTheme());
+        availableThemes.put("Dark/One Dark", new FlatOneDarkIJTheme());
+        availableThemes.put("Dark/Solarized Dark", new FlatSolarizedDarkIJTheme());
+        availableThemes.put("Dark/Spacegray", new FlatSpacegrayIJTheme());
+        availableThemes.put("Dark/Xcode-Dark", new FlatXcodeDarkIJTheme());
     }
 
-    private static void showThemeDialog(JFrame frame) {
-        String[] themes = {
-                "Flat Light",
-                "Flat Dark",
-                "Flat Nord",
-                "Flat Dracula"
-        };
+    public static void showThemeDialog(JFrame frame) {
+        String[] themeNames = availableThemes.keySet().toArray(new String[0]);
 
         String selected = (String) JOptionPane.showInputDialog(
                 frame,
@@ -37,44 +53,27 @@ public class ThemeSwitcher {
                 "Theme Switcher",
                 JOptionPane.PLAIN_MESSAGE,
                 null,
-                themes,
-                themes[0]
+                themeNames,
+                themeNames[0]
         );
 
-        if (selected == null) return;
+        if (selected != null) {
+            applyTheme(selected, frame);
+        }
+    }
+
+    public static void applyTheme(String themeName, JFrame frame) {
+        LookAndFeel laf = availableThemes.get(themeName);
+        if (laf == null) return;
 
         try {
-            switch (selected) {
-                case "Flat Light": {
-                    UIManager.setLookAndFeel(new FlatLightLaf());
-                    break;
-                }
-                case "Flat Dark" :{ UIManager.setLookAndFeel(new FlatDarkLaf()); break; }
-                case "Flat Nord" :{ UIManager.setLookAndFeel(new FlatNordIJTheme()); break; }
-                case "Flat Dracula" :{ UIManager.setLookAndFeel(new FlatDraculaIJTheme());}
-            }
-
-            // Update Look & Feel for all frames
+            UIManager.setLookAndFeel(laf);
             SwingUtilities.updateComponentTreeUI(frame);
-            frame.pack(); // Optional: Größe neu anpassen
+            frame.invalidate();
+            frame.validate();
+            frame.repaint();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    public static void applyTheme(String selected, JFrame frame) {
-        try {
-            switch (selected) {
-                case "Flat Light" :{ UIManager.setLookAndFeel(new FlatLightLaf()); break;}
-                case "Flat Dark" :{ UIManager.setLookAndFeel(new FlatDarkLaf()); break;}
-                case "Flat Nord" :{ UIManager.setLookAndFeel(new FlatNordIJTheme()); break;}
-                case "Flat Dracula" :{ UIManager.setLookAndFeel(new FlatDraculaIJTheme()); break;}
-            }
-            SwingUtilities.updateComponentTreeUI(frame);
-            frame.setSize(400, frame.getHeight()); // fixe Breite nach Themewechsel wiederherstellen
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-
 }
