@@ -6,70 +6,56 @@ import java.awt.*;
 import java.io.File;
 
 public class QuizSelection extends JFrame {
-
     public QuizSelection() {
         super("Quiz Selection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 450);
-        setLocationRelativeTo(null);
+        setResizable(false); // Optional: kein Resize erlauben
+
+        int fixedWidth = 400;
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JLabel label = new JLabel("Quiz Selection");
         label.setFont(new Font("Arial", Font.BOLD, 15));
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        label.setBorder(border);
-
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(label, gbc);
 
-        // Dropdown (ComboBox) zum Thema-Auswählen
-        String[] themes = {"Flat Light", "Flat Dark", "Flat Nord", "Flat Dracula"};
-        JComboBox<String> themeComboBox = new JComboBox<>(themes);
-        themeComboBox.setSelectedItem("Flat Nord");  // Default Theme
-
-        gbc.gridy = 1;
-        panel.add(themeComboBox, gbc);
-
-        themeComboBox.addActionListener(e -> {
-            String selectedTheme = (String) themeComboBox.getSelectedItem();
-            ThemeSwitcher.applyTheme(selectedTheme, this);
-        });
-
         File quizDir = new File("C:/temp/Quiz");
         File[] files = quizDir.listFiles((dir, name) -> name.endsWith(".txt") && !name.equalsIgnoreCase("users.txt"));
 
-        int row = 2;
+        int row = 1;
         if (files != null) {
             for (File file : files) {
-                String fileName = file.getName();
-                String buttonLabel = fileName.substring(0, fileName.length() - 4);
-
-                JButton quizButton = new JButton(buttonLabel);
-                quizButton.setToolTipText("Start Quiz: " + buttonLabel);
-
-                quizButton.addActionListener(ev -> new QuizGUI(file.getName()));
-
-                gbc.gridx = 0;
+                String name = file.getName().replace(".txt", "");
+                JButton quizButton = new JButton(name);
+                quizButton.setToolTipText("Start Quiz: " + name);
+                quizButton.addActionListener(e -> new QuizGUI(file.getName()));
                 gbc.gridy = row++;
                 panel.add(quizButton, gbc);
             }
         }
 
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
-        erstellenButton.setToolTipText("Öffnet das Fenster zum Erstellen eines neuen Quiz");
-        erstellenButton.addActionListener(ev -> new QuizErstellenGUI());
-
-        gbc.gridx = 0;
-        gbc.gridy = row;
+        erstellenButton.addActionListener(e -> new QuizErstellenGUI());
+        gbc.gridy = row++;
         panel.add(erstellenButton, gbc);
 
+        // ThemeSwitcher Dropdown
+        JComboBox<String> themeSelector = new JComboBox<>(new String[]{"Flat Light", "Flat Dark", "Flat Nord", "Flat Dracula"});
+        themeSelector.addActionListener(e -> ThemeSwitcher.applyTheme((String) themeSelector.getSelectedItem(), this));
+        gbc.gridy = row++;
+        panel.add(themeSelector, gbc);
+
         add(panel);
-        setResizable(false);
+        panel.setPreferredSize(new Dimension(fixedWidth, panel.getPreferredSize().height));
+        pack(); // passt nur die Höhe an
+        setLocationRelativeTo(null); // erst nach pack() aufrufen
+
         setVisible(true);
     }
 }

@@ -62,22 +62,19 @@ public class ThemeSwitcher {
         }
     }
     public static void applyTheme(String selected, JFrame frame) {
-        if (selected == null) return;
-
         try {
             switch (selected) {
-                case "Flat Light": UIManager.setLookAndFeel(new FlatLightLaf()); break;
-                case "Flat Dark": UIManager.setLookAndFeel(new FlatDarkLaf()); break;
-                case "Flat Nord": UIManager.setLookAndFeel(new FlatNordIJTheme()); break;
-                case "Flat Dracula": UIManager.setLookAndFeel(new FlatDraculaIJTheme()); break;
+                case "Flat Light" :{ UIManager.setLookAndFeel(new FlatLightLaf()); break;}
+                case "Flat Dark" :{ UIManager.setLookAndFeel(new FlatDarkLaf()); break;}
+                case "Flat Nord" :{ UIManager.setLookAndFeel(new FlatNordIJTheme()); break;}
+                case "Flat Dracula" :{ UIManager.setLookAndFeel(new FlatDraculaIJTheme()); break;}
             }
-
             SwingUtilities.updateComponentTreeUI(frame);
-            frame.setSize(400, 450);
-            frame.pack();
+            frame.setSize(400, frame.getHeight()); // fixe Breite nach Themewechsel wiederherstellen
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
 
 }
