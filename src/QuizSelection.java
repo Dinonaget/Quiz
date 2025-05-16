@@ -7,19 +7,18 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 public class QuizSelection extends JFrame {
-
     public QuizSelection() {
-        setTitle("Quiz Selection");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 400);
-        setLocationRelativeTo(null);
+        JFrame frame = new JFrame("Quiz Selection");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 400);
+        frame.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.BOTH;
 
-        JLabel label = new JLabel("Quiz Auswahl");
+        JLabel label = new JLabel("Quiz Selection");
         label.setFont(new Font("Arial", Font.BOLD, 15));
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         label.setBorder(border);
@@ -28,49 +27,56 @@ public class QuizSelection extends JFrame {
         gbc.gridy = 0;
         panel.add(label, gbc);
 
-        // Benutzername aus der Session
-        String currentUser = Session.getUsername();
-
+        // Dateien im Verzeichnis C:/temp/Quiz
         File quizDir = new File("C:/temp/Quiz");
-        File[] files = quizDir.listFiles((dir, name) ->
-                name.endsWith("." + currentUser + ".txt") || name.endsWith(".Admin.txt"));
+        File[] files = quizDir.listFiles((dir, name) -> name.endsWith(".txt") && !name.equalsIgnoreCase("users.txt"));
 
         int row = 1;
 
-        if (files != null && files.length > 0) {
+//        if (files != null) {
+//            for (File file : files) {
+//                String fileName = file.getName();
+//                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
+//
+//                JButton quizButton = new JButton(buttonLabel);
+//                quizButton.setToolTipText("Start Quiz: " + buttonLabel);
+//
+//                quizButton.addActionListener((ActionEvent e) -> {
+//                    QuizGUI quizGUI = new QuizGUI(); // Optional: Datei übergeben
+//                });
+//
+//                gbc.gridx = 0;
+//                gbc.gridy = row++;
+//                panel.add(quizButton, gbc);
+//            }
+//        } else {
+//            JLabel errorLabel = new JLabel("Fehler beim Laden der Quiz-Dateien.");
+//            gbc.gridx = 0;
+//            gbc.gridy = row++;
+//            panel.add(errorLabel, gbc);
+//        }
+
+        if (files != null) {
             for (File file : files) {
                 String fileName = file.getName();
-                String suffixUser = "." + currentUser + ".txt";
-                String suffixAdmin = ".Admin.txt";
-
-                String buttonLabel;
-                if (fileName.endsWith(suffixUser)) {
-                    buttonLabel = fileName.substring(0, fileName.length() - suffixUser.length());
-                } else if (fileName.endsWith(suffixAdmin)) {
-                    buttonLabel = fileName.substring(0, fileName.length() - suffixAdmin.length());
-                } else {
-                    buttonLabel = fileName; // Fallback, sollte eigentlich nicht passieren
-                }
+                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
 
                 JButton quizButton = new JButton(buttonLabel);
                 quizButton.setToolTipText("Start Quiz: " + buttonLabel);
 
                 quizButton.addActionListener((ActionEvent e) -> {
-                    new QuizGUI(file.getName()); // z.B. "mathe.benutzer.txt"
+                    new QuizGUI(file.getName()); // übergibt z. B. "mathe.txt"
                 });
+
 
                 gbc.gridx = 0;
                 gbc.gridy = row++;
                 panel.add(quizButton, gbc);
             }
-        } else {
-            JLabel errorLabel = new JLabel("Keine Quiz-Dateien für Benutzer \"" + currentUser + "\" gefunden.");
-            gbc.gridx = 0;
-            gbc.gridy = row++;
-            panel.add(errorLabel, gbc);
         }
 
-        // Button zum Erstellen eines neuen Quiz
+
+        // Neuen Button zum Quiz erstellen
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
         erstellenButton.setToolTipText("Öffnet das Fenster zum Erstellen eines neuen Quiz");
 
@@ -82,8 +88,12 @@ public class QuizSelection extends JFrame {
         gbc.gridy = row++;
         panel.add(erstellenButton, gbc);
 
-        add(panel);
-        setResizable(false);
-        setVisible(true);
+        frame.add(panel);
+        frame.setResizable(false);
+        frame.setVisible(true);
+    }
+
+    private QuizSelection getQuizSelection() {
+        return this;
     }
 }
