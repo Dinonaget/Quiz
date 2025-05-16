@@ -40,8 +40,17 @@ public class QuizSelection extends JFrame {
         if (files != null && files.length > 0) {
             for (File file : files) {
                 String fileName = file.getName();
-                // Entferne .username.txt für den Button-Text
-                String buttonLabel = fileName.substring(0, fileName.lastIndexOf('.' + currentUser));
+                String suffixUser = "." + currentUser + ".txt";
+                String suffixAdmin = ".Admin.txt";
+
+                String buttonLabel;
+                if (fileName.endsWith(suffixUser)) {
+                    buttonLabel = fileName.substring(0, fileName.length() - suffixUser.length());
+                } else if (fileName.endsWith(suffixAdmin)) {
+                    buttonLabel = fileName.substring(0, fileName.length() - suffixAdmin.length());
+                } else {
+                    buttonLabel = fileName; // Fallback, sollte eigentlich nicht passieren
+                }
 
                 JButton quizButton = new JButton(buttonLabel);
                 quizButton.setToolTipText("Start Quiz: " + buttonLabel);
