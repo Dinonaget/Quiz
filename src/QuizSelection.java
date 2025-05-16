@@ -28,12 +28,14 @@ public class QuizSelection extends JFrame {
         themeItem.addActionListener(e -> ThemeSwitcher.showThemeDialog(this));
         einstellungenMenu.add(themeItem);
 
+        String User = Session.getUsername();
+
         JMenuItem resetPasswordItem = new JMenuItem("Passwort zurücksetzen");
         resetPasswordItem.addActionListener(e -> {
             // Check if the user is logged in
             if (Session.isLoggedIn()) {
                 // Open password reset dialog for logged-in user
-                new Profil_ErstellenGUI();
+                new NeuesPasswort(User);
                 dispose(); // Close the current window
             } else {
                 // Open password reset dialog with security question
@@ -42,6 +44,15 @@ public class QuizSelection extends JFrame {
             }
         });
         einstellungenMenu.add(resetPasswordItem);
+
+        // Neuer Menüpunkt für Logout
+        JMenuItem logoutItem = new JMenuItem("Logout");
+        logoutItem.addActionListener(e -> {
+            Session.logout(); // Benutzer ausloggen
+            new LoginGUI(); // Zurück zur Login-GUI
+            dispose(); // Aktuelles Fenster schließen
+        });
+        einstellungenMenu.add(logoutItem);
 
         menuBar.add(einstellungenMenu);
         setJMenuBar(menuBar);
