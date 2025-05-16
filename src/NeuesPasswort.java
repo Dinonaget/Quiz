@@ -10,6 +10,7 @@ import java.util.List;
 
 public class NeuesPasswort extends JFrame {
 
+    // Constructor for resetting password with security question
     public NeuesPasswort() {
         setTitle("Passwort zurücksetzen");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -136,40 +137,60 @@ public class NeuesPasswort extends JFrame {
         });
     }
 
-    // Für eingeloggte Benutzer: direktes Zurücksetzen
-    public static void zeigeFensterZumDirektenZurücksetzen(Component parent) {
-        if (!Session.isLoggedIn()) {
-            JOptionPane.showMessageDialog(parent, "Du musst eingeloggt sein, um dein Passwort direkt zu ändern.");
-            return;
-        }
+    // Constructor for resetting password for logged-in user
+    public NeuesPasswort(String username) {
+        setTitle("Passwort zurücksetzen für " + username);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 200);
+        setLocationRelativeTo(null);
+        setLayout(new GridBagLayout());
 
-        String username = Session.getUsername();
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-        JPasswordField pass1 = new JPasswordField();
-        JPasswordField pass2 = new JPasswordField();
+        // Neues Passwort
+        JLabel pass1Label = new JLabel("Neues Passwort:");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(pass1Label, gbc);
 
-        panel.add(new JLabel("Neues Passwort:"));
-        panel.add(pass1);
-        panel.add(new JLabel("Passwort bestätigen:"));
-        panel.add(pass2);
+        JPasswordField pass1Field = new JPasswordField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        add(pass1Field, gbc);
 
-        int result = JOptionPane.showConfirmDialog(
-                parent, panel, "Passwort ändern für " + username,
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
-        );
+        // Passwort bestätigen
+        JLabel pass2Label = new JLabel("Passwort bestätigen:");
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(pass2Label, gbc);
 
-        if (result == JOptionPane.OK_OPTION) {
-            String pw1 = new String(pass1.getPassword());
-            String pw2 = new String(pass2.getPassword());
+        JPasswordField pass2Field = new JPasswordField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(pass2Field, gbc);
 
-            if (!pw1.equals(pw2)) {
-                JOptionPane.showMessageDialog(parent, "Passwörter stimmen nicht überein.");
+        // Button
+        JButton confirmButton = new JButton("Zurücksetzen");
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(confirmButton, gbc);
+
+        setVisible(true);
+
+        confirmButton.addActionListener(e -> {
+            String newPass1 = new String(pass1Field.getPassword());
+            String newPass2 = new String(pass2Field.getPassword());
+
+            if (newPass1.isEmpty() || newPass2.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Alle Felder müssen ausgefüllt sein!");
                 return;
             }
 
-            if (pw1.isEmpty()) {
-                JOptionPane.showMessageDialog(parent, "Passwort darf nicht leer sein.");
+            if (!newPass1.equals(newPass2)) {
+                JOptionPane.showMessageDialog(this, "Passwörter stimmen nicht überein!");
                 return;
             }
 
@@ -177,20 +198,22 @@ public class NeuesPasswort extends JFrame {
                 boolean success = resetPasswordWithoutSecurityCheck(
                         "C:/temp/Quiz/users.txt",
                         username,
-                        encryptPassword(pw1)
+                        encryptPassword(newPass1)
                 );
 
                 if (success) {
-                    JOptionPane.showMessageDialog(parent, "Passwort erfolgreich geändert.");
+                    JOptionPane.showMessageDialog(this, "Passwort erfolgreich geändert.");
+                    new QuizSelection();
+                    dispose();
                 } else {
-                    JOptionPane.showMessageDialog(parent, "Fehler: Benutzer nicht gefunden.");
+                    JOptionPane.showMessageDialog(this, "Fehler: Benutzer nicht gefunden.");
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(parent, "Fehler beim Schreiben der Datei.");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Fehler beim Speichern!");
             }
-        }
+        });
     }
 
     public static boolean resetPasswordWithSecurityCheck(String filename, String username, String answer, String newEncryptedPassword) throws IOException {
@@ -310,6 +333,6 @@ public class NeuesPasswort extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(NeuesPasswort::new);
+        SwingUtilities.invokeLater(() -> new NeuesPasswort());
     }
 }

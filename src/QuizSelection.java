@@ -28,9 +28,20 @@ public class QuizSelection extends JFrame {
         themeItem.addActionListener(e -> ThemeSwitcher.showThemeDialog(this));
         einstellungenMenu.add(themeItem);
 
-        JMenuItem infoItem = new JMenuItem("Info");
-        // noch nicht implementiert
-        einstellungenMenu.add(infoItem);
+        JMenuItem resetPasswordItem = new JMenuItem("Passwort zurücksetzen");
+        resetPasswordItem.addActionListener(e -> {
+            // Check if the user is logged in
+            if (Session.isLoggedIn()) {
+                // Open password reset dialog for logged-in user
+                new Profil_ErstellenGUI();
+                dispose(); // Close the current window
+            } else {
+                // Open password reset dialog with security question
+                new NeuesPasswort();
+                dispose(); // Close the current window
+            }
+        });
+        einstellungenMenu.add(resetPasswordItem);
 
         menuBar.add(einstellungenMenu);
         setJMenuBar(menuBar);
