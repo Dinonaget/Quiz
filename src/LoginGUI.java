@@ -4,107 +4,86 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
-import org.json.JSONObject;
 
 public class LoginGUI extends JFrame {
 
     public LoginGUI() {
-        // Titel setzen
         setTitle("Quiz-Login");
-
-        // Grundeinstellungen für das Fenster
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
-        setLocationRelativeTo(null); // Fenster zentrieren
+        setLocationRelativeTo(null);
 
-//        // Farben und Schrift
-//        Color hintergrundFarbe = new Color(240, 248, 255); // leichtes Blau
-//        Color buttonFarbe = new Color(70, 130, 180);       // Stahlblau
-//        Color textFarbe = Color.WHITE;
-//        Font schrift = new Font("SansSerif", Font.PLAIN, 14);
 
-        // Hauptpanel mit Hintergrundfarbe
+        Font schrift = new Font("SansSerif", Font.PLAIN, 14);
+
         JPanel panel = new JPanel(new GridBagLayout());
-//        panel.setBackground(hintergrundFarbe);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Benutzername Label
+        // Benutzername
         JLabel userLabel = new JLabel("Benutzername:");
-//        userLabel.setFont(schrift);
+        userLabel.setFont(schrift);
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(userLabel, gbc);
 
-        // Benutzername Textfeld
         JTextField userField = new JTextField(20);
-//        userField.setFont(schrift);
+        userField.setFont(schrift);
         gbc.gridx = 1;
         gbc.gridy = 0;
         panel.add(userField, gbc);
 
-        // Passwort Label
+        // Passwort
         JLabel passLabel = new JLabel("Passwort:");
-//        passLabel.setFont(schrift);
+        passLabel.setFont(schrift);
         gbc.gridx = 0;
         gbc.gridy = 1;
         panel.add(passLabel, gbc);
 
-        // Passwort-Feld
         JPasswordField passField = new JPasswordField(20);
-//        passField.setFont(schrift);
+        passField.setFont(schrift);
         gbc.gridx = 1;
         gbc.gridy = 1;
         panel.add(passField, gbc);
 
-        // Login-Button
+        // Buttons
         JButton loginButton = new JButton("Login");
-//        styleButton(loginButton, buttonFarbe, textFarbe, schrift);
         gbc.gridx = 1;
         gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
         panel.add(loginButton, gbc);
 
-        // Registrieren-Button
         JButton registrierButton = new JButton("Registrieren");
-//        styleButton(registrierButton, new Color(60, 179, 113), textFarbe, schrift); // Mittelgrün
         gbc.gridx = 1;
         gbc.gridy = 3;
         panel.add(registrierButton, gbc);
 
-        // Passwort-Vergessen-Button
         JButton passwortVergessenButton = new JButton("Passwort Vergessen");
-//        styleButton(passwortVergessenButton, new Color(255, 140, 0), textFarbe, schrift); // Orange
         gbc.gridx = 1;
         gbc.gridy = 4;
         panel.add(passwortVergessenButton, gbc);
 
-        // Panel zum Frame hinzufügen
         add(panel);
-
-        // Sichtbar machen
         setVisible(true);
 
-        // ActionListener für den Registrieren-Button
+        // Aktionen
         registrierButton.addActionListener((ActionEvent e) -> {
             new Profil_ErstellenGUI();
             dispose();
         });
 
-        // ActionListener Login
         loginButton.addActionListener((ActionEvent e) -> {
-            String benutzer = userField.getText();
+            String benutzer = userField.getText().trim();
             String passwort = new String(passField.getPassword());
 
-            // Benutzerdaten aus der users.txt-Datei lesen
             String gespeichertesPasswort = getBenutzerPasswort(benutzer);
             if (gespeichertesPasswort == null) {
                 JOptionPane.showMessageDialog(this, "Benutzer existiert nicht. Bitte registrieren.");
             } else {
-                String entschlüsseltesPasswort = decryptPassword(gespeichertesPasswort);
-                if (entschlüsseltesPasswort.equals(passwort)) {
+                String eingegebenVerschlüsselt = encryptPassword(passwort);
+                if (gespeichertesPasswort.equals(eingegebenVerschlüsselt)) {
                     JOptionPane.showMessageDialog(this, "Login erfolgreich!");
+                    Session.login(benutzer);
                     new QuizSelection();
                     dispose();
                 } else {
@@ -119,7 +98,6 @@ public class LoginGUI extends JFrame {
         });
     }
 
-    // Hilfsmethode zur Button-Gestaltung
     private void styleButton(JButton button, Color background, Color foreground, Font font) {
         button.setBackground(background);
         button.setForeground(foreground);
@@ -129,19 +107,15 @@ public class LoginGUI extends JFrame {
     }
 
     /**
-     * Liest das verschlüsselte Passwort eines Benutzers aus der users.txt-Datei.
+     * Liest das verschlüsselte Passwort aus der Datei für einen Benutzer.
      */
     private String getBenutzerPasswort(String benutzer) {
         try (BufferedReader reader = new BufferedReader(new FileReader("C:/temp/Quiz/users.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":", 2);
-                if (parts.length == 2) {
-                    String username = parts[0];
-                    String password = parts[1];
-                    if (username.equals(benutzer)) {
-                        return password;
-                    }
+                String[] parts = line.split(":", 4); // Neues Format
+                if (parts.length >= 2 && parts[0].equals(benutzer)) {
+                    return parts[1]; // verschlüsseltes Passwort
                 }
             }
         } catch (IOException e) {
@@ -151,20 +125,17 @@ public class LoginGUI extends JFrame {
     }
 
     /**
-     * Entschlüsselt das Passwort, das aus der users.txt-Datei gelesen wurde.
+     * Verschlüsselt das eingegebene Passwort (muss identisch zu Profil_ErstellenGUI sein).
      */
-    private String decryptPassword(String encryptedPassword) {
-        StringBuilder decryptedPassword = new StringBuilder();
-        String[] values = encryptedPassword.split(" ");
-        for (String value : values) {
-            int decodedValue = Integer.parseInt(value);
-            decodedValue = ((decodedValue >> 5) ^ (decodedValue << 3)) % 256; // Entschlüsselungs-Logik
-            decryptedPassword.append((char) decodedValue);
+    private String encryptPassword(String text) {
+        StringBuilder result = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            int value = ((c << 5) ^ (c >> 3)) % 256;
+            result.append(value).append(" ");
         }
-        return decryptedPassword.toString();
+        return result.toString().trim();
     }
 
-    // Einstiegspunkt
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginGUI::new);
     }

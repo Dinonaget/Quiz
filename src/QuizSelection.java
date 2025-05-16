@@ -5,95 +5,123 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuizSelection extends JFrame {
-    public QuizSelection() {
-        JFrame frame = new JFrame("Quiz Selection");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 400);
-        frame.setLocationRelativeTo(null);
+    private List<JButton> buttons = new ArrayList<>();
 
+    public QuizSelection() {
+        super("Quiz Selection");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(true);
+
+        int fixedWidth = 500;
+        int maxWidth = 1000;
+        int maxHeight = 800;
+
+        // Menüleiste erstellen
+        JMenuBar menuBar = new JMenuBar();
+        JMenu einstellungenMenu = new JMenu("Einstellungen");
+
+        JMenuItem themeItem = new JMenuItem("Theme wechseln");
+        themeItem.addActionListener(e -> ThemeSwitcher.showThemeDialog(this));
+        einstellungenMenu.add(themeItem);
+
+        JMenuItem infoItem = new JMenuItem("Info");
+        // noch nicht implementiert
+        einstellungenMenu.add(infoItem);
+
+        menuBar.add(einstellungenMenu);
+        setJMenuBar(menuBar);
+
+        // Hauptpanel mit Quizbuttons
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JLabel label = new JLabel("Quiz Selection");
-        label.setFont(new Font("Arial", Font.BOLD, 15));
-        Border border = BorderFactory.createLineBorder(Color.BLACK);
-        label.setBorder(border);
-
+        label.setFont(new Font("Arial", Font.BOLD, 20));
+        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(label, gbc);
 
-        // Dateien im Verzeichnis C:/temp/Quiz
+        // Benutzername aus der Session
+        String currentUser = Session.getUsername();
+
         File quizDir = new File("C:/temp/Quiz");
-        File[] files = quizDir.listFiles((dir, name) -> name.endsWith(".txt") && !name.equalsIgnoreCase("users.txt"));
+        File[] files = quizDir.listFiles((dir, name) ->
+                name.endsWith("." + currentUser + ".txt") || name.endsWith(".Admin.txt"));
 
         int row = 1;
 
-//        if (files != null) {
-//            for (File file : files) {
-//                String fileName = file.getName();
-//                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
-//
-//                JButton quizButton = new JButton(buttonLabel);
-//                quizButton.setToolTipText("Start Quiz: " + buttonLabel);
-//
-//                quizButton.addActionListener((ActionEvent e) -> {
-//                    QuizGUI quizGUI = new QuizGUI(); // Optional: Datei übergeben
-//                });
-//
-//                gbc.gridx = 0;
-//                gbc.gridy = row++;
-//                panel.add(quizButton, gbc);
-//            }
-//        } else {
-//            JLabel errorLabel = new JLabel("Fehler beim Laden der Quiz-Dateien.");
-//            gbc.gridx = 0;
-//            gbc.gridy = row++;
-//            panel.add(errorLabel, gbc);
-//        }
-
-        if (files != null) {
+        if (files != null && files.length > 0) {
             for (File file : files) {
                 String fileName = file.getName();
-                String buttonLabel = fileName.substring(0, fileName.length() - 4); // ohne ".txt"
+                String suffixUser = "." + currentUser + ".txt";
+                String suffixAdmin = ".Admin.txt";
+
+                String buttonLabel;
+                if (fileName.endsWith(suffixUser)) {
+                    buttonLabel = fileName.substring(0, fileName.length() - suffixUser.length());
+                } else if (fileName.endsWith(suffixAdmin)) {
+                    buttonLabel = fileName.substring(0, fileName.length() - suffixAdmin.length());
+                } else {
+                    buttonLabel = fileName; // Fallback, sollte eigentlich nicht passieren
+                }
 
                 JButton quizButton = new JButton(buttonLabel);
                 quizButton.setToolTipText("Start Quiz: " + buttonLabel);
-
                 quizButton.addActionListener((ActionEvent e) -> {
-                    new QuizGUI(file.getName()); // übergibt z. B. "mathe.txt"
+                    new QuizGUI(file.getName()); // z.B. "mathe.benutzer.txt"
                 });
-
-
-                gbc.gridx = 0;
                 gbc.gridy = row++;
                 panel.add(quizButton, gbc);
+                buttons.add(quizButton);
             }
+        } else {
+            JLabel errorLabel = new JLabel("Keine Quiz-Dateien für Benutzer \"" + currentUser + "\" gefunden.");
+            gbc.gridx = 0;
+            gbc.gridy = row++;
+            panel.add(errorLabel, gbc);
         }
 
-
-        // Neuen Button zum Quiz erstellen
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
         erstellenButton.setToolTipText("Öffnet das Fenster zum Erstellen eines neuen Quiz");
-
         erstellenButton.addActionListener(e -> {
             new QuizErstellenGUI();
         });
-
-        gbc.gridx = 0;
         gbc.gridy = row++;
         panel.add(erstellenButton, gbc);
+        buttons.add(erstellenButton);
 
-        frame.add(panel);
-        frame.setResizable(false);
-        frame.setVisible(true);
+        add(panel);
+        panel.setPreferredSize(new Dimension(fixedWidth, panel.getPreferredSize().height));
+        pack();
+        setLocationRelativeTo(null);
+        setMaximumSize(new Dimension(maxWidth, maxHeight));
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                aktualisiereFonts(label, buttons);
+            }
+        });
+
+        setVisible(true);
     }
 
-    private QuizSelection getQuizSelection() {
-        return this;
+    private void aktualisiereFonts(JLabel label, List<JButton> buttons) {
+        int breite = getWidth();
+        float faktor = breite / 500.0f;
+
+        int labelFontSize = Math.round(20 * faktor);
+        int buttonFontSize = Math.round(16 * faktor);
+
+        label.setFont(new Font("Arial", Font.BOLD, labelFontSize));
+        for (JButton b : buttons) {
+            b.setFont(new Font("Arial", Font.PLAIN, buttonFontSize));
+        }
     }
 }
