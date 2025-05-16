@@ -11,9 +11,9 @@ import java.util.List;
 public class NeuesPasswort extends JFrame {
 
     public NeuesPasswort() {
-        setTitle("Passwort ändern");
+        setTitle("Passwort zurücksetzen");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 200);
+        setSize(500, 300);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
 
@@ -21,7 +21,7 @@ public class NeuesPasswort extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Benutzername-Feld
+        // Benutzername
         JLabel userLabel = new JLabel("Benutzername:");
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -32,61 +32,103 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 0;
         add(userField, gbc);
 
-        // Passwort-Feld 1
-        JLabel pass1Label = new JLabel("Neues Passwort:");
+        // Sicherheitsfrage
+        JLabel questionLabel = new JLabel("Sicherheitsfrage:");
         gbc.gridx = 0;
         gbc.gridy = 1;
+        add(questionLabel, gbc);
+
+        JTextField questionField = new JTextField(20);
+        questionField.setEditable(false);
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        add(questionField, gbc);
+
+        // Antwort
+        JLabel answerLabel = new JLabel("Antwort:");
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        add(answerLabel, gbc);
+
+        JTextField answerField = new JTextField(20);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        add(answerField, gbc);
+
+        // Neues Passwort
+        JLabel pass1Label = new JLabel("Neues Passwort:");
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         add(pass1Label, gbc);
 
         JPasswordField pass1Field = new JPasswordField(20);
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         add(pass1Field, gbc);
 
-        // Passwort-Feld 2
+        // Passwort bestätigen
         JLabel pass2Label = new JLabel("Passwort bestätigen:");
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         add(pass2Label, gbc);
 
         JPasswordField pass2Field = new JPasswordField(20);
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 4;
         add(pass2Field, gbc);
 
-        // Bestätigungs-Button
-        JButton confirmButton = new JButton("Bestätigen");
+        // Button
+        JButton confirmButton = new JButton("Zurücksetzen");
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.CENTER;
         add(confirmButton, gbc);
 
         setVisible(true);
 
-        // Aktion bei Button-Klick
+        // Sicherheitsfrage beim Username-Eingabe
+        userField.addActionListener(e -> {
+            String username = userField.getText().trim();
+            String question = getSecurityQuestion("C:/temp/Quiz/users.txt", username);
+            if (question != null) {
+                questionField.setText(question);
+            } else {
+                JOptionPane.showMessageDialog(this, "Benutzer nicht gefunden!");
+            }
+        });
+
         confirmButton.addActionListener(e -> {
             String username = userField.getText().trim();
-            String raw1Password = new String(pass1Field.getPassword());
-            String raw2Password = new String(pass2Field.getPassword());
+            String answer = answerField.getText().trim();
+            String newPass1 = new String(pass1Field.getPassword());
+            String newPass2 = new String(pass2Field.getPassword());
 
-            if (username.isEmpty() || raw1Password.isEmpty() || raw2Password.isEmpty()) {
+            if (username.isEmpty() || answer.isEmpty() || newPass1.isEmpty() || newPass2.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Alle Felder müssen ausgefüllt sein!");
                 return;
             }
 
-            if (!raw1Password.equals(raw2Password)) {
-                JOptionPane.showMessageDialog(this, "Passwörter müssen übereinstimmen!");
+            if (!newPass1.equals(newPass2)) {
+                JOptionPane.showMessageDialog(this, "Passwörter stimmen nicht überein!");
                 return;
             }
 
-            String encryptedPassword = encryption(raw1Password);
             try {
-                boolean updated = updateUserPassword("C:/temp/Quiz/users.txt", username, encryptedPassword);
-                if (updated) {
+                boolean success = resetPasswordWithSecurityCheck(
+                        "C:/temp/Quiz/users.txt",
+                        username,
+                        answer,
+                        encryptPassword(newPass1)
+                );
+
+                if (success) {
                     JOptionPane.showMessageDialog(this, "Passwort erfolgreich geändert.");
-                    new QuizSelection(); // Zur nächsten GUI wechseln
-                    dispose(); // Aktuelles Fenster schließen
+                    new QuizSelection();
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Sicherheitsantwort falsch oder Benutzer nicht gefunden.");
                 }
+
             } catch (IOException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Fehler beim Speichern!");
@@ -94,56 +136,180 @@ public class NeuesPasswort extends JFrame {
         });
     }
 
-    /**
-     * Ändert das Passwort eines bestehenden Benutzers in der Datei.
-     * Gibt true zurück, wenn Benutzer gefunden und geändert wurde.
-     * Zeigt Fehlermeldung, wenn Benutzer nicht existiert.
-     */
-    public static boolean updateUserPassword(String filename, String username, String encryptedPassword) throws IOException {
-        String filePath = "C:/temp/Quiz/users.txt";
-        File file = new File(filePath);
-        if (!file.exists()) {
-            JOptionPane.showMessageDialog(null, "Benutzerdatenbank nicht gefunden!", "Fehler", JOptionPane.ERROR_MESSAGE);
-            return false;
+    // Für eingeloggte Benutzer: direktes Zurücksetzen
+    public static void zeigeFensterZumDirektenZurücksetzen(Component parent) {
+        if (!Session.isLoggedIn()) {
+            JOptionPane.showMessageDialog(parent, "Du musst eingeloggt sein, um dein Passwort direkt zu ändern.");
+            return;
         }
 
-        List<String> lines = Files.readAllLines(Paths.get(filePath));
-        boolean userFound = false;
+        String username = Session.getUsername();
+
+        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
+        JPasswordField pass1 = new JPasswordField();
+        JPasswordField pass2 = new JPasswordField();
+
+        panel.add(new JLabel("Neues Passwort:"));
+        panel.add(pass1);
+        panel.add(new JLabel("Passwort bestätigen:"));
+        panel.add(pass2);
+
+        int result = JOptionPane.showConfirmDialog(
+                parent, panel, "Passwort ändern für " + username,
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            String pw1 = new String(pass1.getPassword());
+            String pw2 = new String(pass2.getPassword());
+
+            if (!pw1.equals(pw2)) {
+                JOptionPane.showMessageDialog(parent, "Passwörter stimmen nicht überein.");
+                return;
+            }
+
+            if (pw1.isEmpty()) {
+                JOptionPane.showMessageDialog(parent, "Passwort darf nicht leer sein.");
+                return;
+            }
+
+            try {
+                boolean success = resetPasswordWithoutSecurityCheck(
+                        "C:/temp/Quiz/users.txt",
+                        username,
+                        encryptPassword(pw1)
+                );
+
+                if (success) {
+                    JOptionPane.showMessageDialog(parent, "Passwort erfolgreich geändert.");
+                } else {
+                    JOptionPane.showMessageDialog(parent, "Fehler: Benutzer nicht gefunden.");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(parent, "Fehler beim Schreiben der Datei.");
+            }
+        }
+    }
+
+    public static boolean resetPasswordWithSecurityCheck(String filename, String username, String answer, String newEncryptedPassword) throws IOException {
+        if (!validateUserFile(filename)) return false;
+
+        List<String> lines = Files.readAllLines(Paths.get(filename));
         List<String> updatedLines = new ArrayList<>();
+        boolean userFound = false;
 
         for (String line : lines) {
-            String[] parts = line.split(":", 2);
-            if (parts.length == 2 && parts[0].equals(username)) {
-                updatedLines.add(username + ":" + encryptedPassword); // Passwort aktualisieren
+            String[] parts = line.split(":", 4);
+            if (parts.length == 4 && parts[0].equals(username)) {
+                String storedEncryptedAnswer = parts[3].trim();
+                String givenEncryptedAnswer = encryptAnswer(answer);
+                if (storedEncryptedAnswer.equals(givenEncryptedAnswer)) {
+                    updatedLines.add(username + ":" + newEncryptedPassword + ":" + parts[2] + ":" + storedEncryptedAnswer);
+                    userFound = true;
+                } else {
+                    updatedLines.add(line);
+                }
+            } else {
+                updatedLines.add(line);
+            }
+        }
+
+        if (userFound) {
+            Files.write(Paths.get(filename), updatedLines);
+        }
+
+        return userFound;
+    }
+
+    public static boolean resetPasswordWithoutSecurityCheck(String filename, String username, String newEncryptedPassword) throws IOException {
+        if (!validateUserFile(filename)) return false;
+
+        List<String> lines = Files.readAllLines(Paths.get(filename));
+        List<String> updatedLines = new ArrayList<>();
+        boolean userFound = false;
+
+        for (String line : lines) {
+            String[] parts = line.split(":", 4);
+            if (parts.length == 4 && parts[0].equals(username)) {
+                updatedLines.add(username + ":" + newEncryptedPassword + ":" + parts[2] + ":" + parts[3]);
                 userFound = true;
             } else {
                 updatedLines.add(line);
             }
         }
 
-        if (!userFound) {
-            JOptionPane.showMessageDialog(null, "Benutzer \"" + username + "\" existiert nicht!", "Fehler", JOptionPane.ERROR_MESSAGE);
+        if (userFound) {
+            Files.write(Paths.get(filename), updatedLines);
+        }
+
+        return userFound;
+    }
+
+    public static boolean validateUserFile(String filename) {
+        File file = new File(filename);
+        if (!file.exists()) {
+            JOptionPane.showMessageDialog(null, "Benutzerdaten-Datei existiert nicht: " + filename);
+            return false;
+        }
+        if (!file.canRead()) {
+            JOptionPane.showMessageDialog(null, "Benutzerdaten-Datei kann nicht gelesen werden: " + filename);
             return false;
         }
 
-        Files.write(Paths.get(filePath), updatedLines);
+        try {
+            List<String> lines = Files.readAllLines(file.toPath());
+            for (String line : lines) {
+                if (line.trim().isEmpty()) continue;
+                String[] parts = line.split(":", 4);
+                if (parts.length != 4) {
+                    JOptionPane.showMessageDialog(null, "Ungültige Zeile in Benutzerdaten-Datei:\n" + line);
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Fehler beim Lesen der Datei:\n" + e.getMessage());
+            return false;
+        }
+
         return true;
     }
 
-    /**
-     * Verschlüsselt einen String durch Bitoperationen und gibt Zahlenfolge zurück.
-     */
-    public static String encryption(String text) {
+    public static String getSecurityQuestion(String filename, String username) {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(filename));
+            for (String line : lines) {
+                String[] parts = line.split(":", 4);
+                if (parts.length == 4 && parts[0].equals(username)) {
+                    return parts[2];
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
-        for (int i = 0; i < text.length(); i++) {
-            int value = (int) text.charAt(i);
-            value = ((value << 5) ^ (value >> 3)) % 256;
+        for (char c : text.toCharArray()) {
+            int value = ((c << 5) ^ (c >> 3)) % 256;
+            result.append(value).append(" ");
+        }
+        return result.toString().trim();
+    }
+
+    public static String encryptAnswer(String text) {
+        StringBuilder result = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            int value = ((c * 7) + 13) % 256;
             result.append(value).append(" ");
         }
         return result.toString().trim();
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Profil_ErstellenGUI::new);
+        SwingUtilities.invokeLater(NeuesPasswort::new);
     }
 }
