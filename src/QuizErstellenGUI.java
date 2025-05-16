@@ -15,7 +15,7 @@ public class QuizErstellenGUI extends JFrame {
 
     public QuizErstellenGUI() {
         setTitle("Quiz erstellen");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 500);
         setLayout(new BorderLayout());
 
