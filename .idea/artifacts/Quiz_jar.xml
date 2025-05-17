@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Quiz:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Quiz_jar</output-path>
+    <root id="archive" name="Quiz.jar">
+      <element id="module-output" name="Quiz" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/formdev/flatlaf/3.6/flatlaf-3.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/formdev/flatlaf-intellij-themes/3.6/flatlaf-intellij-themes-3.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/json/json/20250107/json-20250107.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

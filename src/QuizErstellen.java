@@ -60,12 +60,26 @@ public class QuizErstellen {
         try (BufferedReader reader = new BufferedReader(new FileReader(fullPath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String question = line;
+                // Zeile 1: ID-Zeile lesen (optional verwendbar, aktuell ignoriert)
+                String idLine = line;
+                if (!idLine.startsWith("ID:")) {
+                    throw new IOException("Unerwartetes Dateiformat: ID-Zeile fehlt.");
+                }
+
+                // Zeile 2: Frage
+                String question = reader.readLine();
+                if (question == null) throw new IOException("Fehlende Frage nach ID-Zeile.");
+
+                // Zeile 3–6: Antworten
                 String[] answers = new String[4];
                 for (int i = 0; i < 4; i++) {
                     answers[i] = reader.readLine();
                 }
+
+                // Zeile 7: Richtiger Index
                 int correctIndex = Integer.parseInt(reader.readLine());
+
+                // Neue Question erstellen (ID ignorieren, weil Questions-ID automatisch vergeben wird)
                 Questions q = new Questions(question, answers, correctIndex);
                 questionList.add(q);
             }

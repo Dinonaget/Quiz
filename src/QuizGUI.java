@@ -6,16 +6,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class QuizGUI extends JFrame {
-    private ArrayList<Questions> questionsList = new ArrayList<>();
+    private List<Questions> questionsList = new ArrayList<>();
+    private List<Questions> skippedQuestions = new LinkedList<>();
     private int currentIndex = 0;
     private int score = 0;
+    private boolean reviewingSkipped = false;
 
     private JLabel questionLabel;
     private JRadioButton[] options;
     private ButtonGroup group;
-    private JButton nextButton;
+    private JButton nextButton, skipButton;
 
     public QuizGUI(String filename) {
         loadQuestionsFromFile(filename);
@@ -33,7 +37,7 @@ public class QuizGUI extends JFrame {
     private void setupGUI() {
         setTitle("Quiz App");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 300);
+        setSize(500, 350);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -53,15 +57,33 @@ public class QuizGUI extends JFrame {
 
         add(optionsPanel, BorderLayout.CENTER);
 
+        JPanel bottomPanel = new JPanel(new FlowLayout());
         nextButton = new JButton("Weiter");
+        skipButton = new JButton("Überspringen");
+
         nextButton.addActionListener(e -> checkAndNext());
-        add(nextButton, BorderLayout.SOUTH);
+        skipButton.addActionListener(e -> skipQuestion());
+
+        bottomPanel.add(nextButton);
+        bottomPanel.add(skipButton);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
     private void showQuestion() {
         if (currentIndex >= questionsList.size()) {
+            if (!reviewingSkipped && !skippedQuestions.isEmpty()) {
+                // Starte zweite Runde mit übersprungenen Fragen
+                questionsList = new ArrayList<>(skippedQuestions);
+                skippedQuestions.clear();
+                currentIndex = 0;
+                reviewingSkipped = true;
+                JOptionPane.showMessageDialog(this, "⏭ Jetzt folgen die übersprungenen Fragen.");
+                showQuestion();
+                return;
+            }
+
             showResult();
             return;
         }
@@ -99,9 +121,15 @@ public class QuizGUI extends JFrame {
         showQuestion();
     }
 
+    private void skipQuestion() {
+        skippedQuestions.add(questionsList.get(currentIndex));
+        currentIndex++;
+        showQuestion();
+    }
+
     private void showResult() {
         JOptionPane.showMessageDialog(this,
-                "✅ Du hast " + score + " von " + questionsList.size() + " richtig!");
+                "✅ Du hast " + score + " von " + (score + skippedQuestions.size()) + " richtig beantwortet.");
         dispose();
     }
 
@@ -109,15 +137,19 @@ public class QuizGUI extends JFrame {
         String fullPath = "C:/temp/Quiz/" + filename;
         try {
             java.util.List<String> lines = Files.readAllLines(Paths.get(fullPath));
-            for (int i = 0; i + 5 < lines.size(); i += 6) {
-                String question = lines.get(i);
+            for (int i = 0; i + 6 < lines.size(); i += 7) {
+                String idLine = lines.get(i);
+                if (!idLine.startsWith("ID:")) continue;
+
+                String question = lines.get(i + 1);
                 String[] answers = new String[4];
                 for (int j = 0; j < 4; j++) {
-                    answers[j] = lines.get(i + 1 + j);
+                    answers[j] = lines.get(i + 2 + j);
                 }
+
                 int correct;
                 try {
-                    correct = Integer.parseInt(lines.get(i + 5));
+                    correct = Integer.parseInt(lines.get(i + 6));
                     if (correct < 0 || correct > 3) continue;
                 } catch (NumberFormatException e) {
                     continue;
