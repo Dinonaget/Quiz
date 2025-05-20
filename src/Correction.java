@@ -4,7 +4,10 @@ import java.util.Scanner;
 
 public class Correction {
     public static void main(String[] args) {
-        QuestionCorrection question = new QuestionCorrection("How many planets are there in our solar system?", "8");
+        QuestionCorrection question = new QuestionCorrection(
+                "How many planets are there in our solar system?",
+                "8"
+        );
         Correction correction = new Correction();
         correction.checkAnswer(question);
     }
@@ -20,7 +23,7 @@ public class Correction {
         System.out.println("Question: " + question.text);
         System.out.println("Please enter your answer:");
 
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in); // NICHT schließen
         String userAnswer = scanner.nextLine().trim();
 
         if (userAnswer.isEmpty()) {
@@ -41,6 +44,6 @@ public class Correction {
         }
 
         answered = true;
-        scanner.close();
+        // scanner.close();  ← NICHT schließen
     }
 }
