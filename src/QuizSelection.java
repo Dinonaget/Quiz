@@ -3,6 +3,9 @@ package src;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 
 public class QuizSelection extends JFrame {
@@ -40,9 +43,33 @@ public class QuizSelection extends JFrame {
             }
         }
 
+
+
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
         erstellenButton.addActionListener(e -> new QuizErstellenGUI());
         gbc.gridy = row++;
+
+        erstellenButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_N) {
+                    erstellenButton.doClick();
+                }
+            }
+        });
+/*
+        label.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                    erstellenButton.doClick();
+                }
+
+            }
+
+        });
+*/
         panel.add(erstellenButton, gbc);
 
         // ThemeSwitcher Dropdown
