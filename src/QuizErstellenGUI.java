@@ -2,12 +2,8 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
-import static com.sun.java.accessibility.util.AWTEventMonitor.addActionListener;
-
-
 
 public class QuizErstellenGUI extends JFrame {
     private JTextField quizNameField, questionField;
@@ -50,26 +46,9 @@ public class QuizErstellenGUI extends JFrame {
         }
 
         JButton addButton = new JButton("Frage hinzufügen");
-     /*
-
-        addKeyListener(new KeyAdapter() {
-                           @Override
-                           public void keyPressed(KeyEvent e) {
-                               super.keyPressed(e);
-                               if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                                 addButton.doClick();
-                               }
-
-                           }
-
-                       });
-*/
-
         centerPanel.add(addButton);
-
         JButton saveButton = new JButton("Quiz speichern");
         centerPanel.add(saveButton);
-        getRootPane().setDefaultButton(saveButton);
         add(centerPanel, BorderLayout.CENTER);
 
         statusArea = new JTextArea(5, 20);
@@ -161,12 +140,4 @@ public class QuizErstellenGUI extends JFrame {
     private void zeigeStatus(String msg) {
         statusArea.append(msg + "\n");
     }
-
-    public void keyPressed(KeyEvent e) {
-
-        int key = e.getKeyCode();
-
-    }
 }
-
-
