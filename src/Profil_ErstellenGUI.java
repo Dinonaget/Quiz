@@ -59,6 +59,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridx = 1;
         gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.CENTER;
+        getRootPane().setDefaultButton(confirmButton);
         add(confirmButton, gbc);
 
         setVisible(true);

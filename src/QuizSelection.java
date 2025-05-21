@@ -48,27 +48,17 @@ public class QuizSelection extends JFrame {
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
         erstellenButton.addActionListener(e -> new QuizErstellenGUI());
         gbc.gridy = row++;
-
+/*
         erstellenButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_N) {
                     erstellenButton.doClick();
+                    System.out.println("worked");
                 }
             }
         });
-/*
-        label.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                    erstellenButton.doClick();
-                }
 
-            }
-
-        });
 */
         panel.add(erstellenButton, gbc);
 
