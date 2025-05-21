@@ -63,6 +63,9 @@ public class QuizGUI extends JFrame {
 
         nextButton.addActionListener(e -> checkAndNext());
         skipButton.addActionListener(e -> skipQuestion());
+        nextButton.addActionListener(e -> checkAndNext());// Event-Listener für den Button
+        getRootPane().setDefaultButton(nextButton);
+        add(nextButton, BorderLayout.SOUTH); // Button zum Fenster hinzufügen
 
         bottomPanel.add(nextButton);
         bottomPanel.add(skipButton);

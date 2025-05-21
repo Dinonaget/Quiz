@@ -3,7 +3,6 @@ package src;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 
 public class QuizSelection extends JFrame {
@@ -61,7 +60,6 @@ public class QuizSelection extends JFrame {
             panel.add(errorLabel, gbc);
         }
 
-        // Button zum Erstellen eines neuen Quiz
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
         erstellenButton.setToolTipText("Öffnet das Fenster zum Erstellen eines neuen Quiz");
 
@@ -71,6 +69,18 @@ public class QuizSelection extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = row++;
+/*
+        erstellenButton.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_N) {
+                    erstellenButton.doClick();
+                    System.out.println("worked");
+                }
+            }
+        });
+
+*/
         panel.add(erstellenButton, gbc);
 
         add(panel);
