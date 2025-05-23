@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -151,6 +152,7 @@ public class Profil_ErstellenGUI extends JFrame {
     }
 
     public static void writeUser(String filename, String username, String password, String question, String encryptedAnswer) throws IOException {
+        new File("C:/temp/Quiz").mkdirs();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             writer.write(username + ":" + password + ":" + question + ":" + encryptedAnswer);
             writer.newLine();
