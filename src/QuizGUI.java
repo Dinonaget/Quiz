@@ -37,29 +37,46 @@ public class QuizGUI extends JFrame {
     private void setupGUI() {
         setTitle("Quiz App");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 350);
+        setMinimumSize(new Dimension(600, 400));
+        setPreferredSize(new Dimension(800, 500));
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(10, 10));
 
+        // Oben: Frage
         questionLabel = new JLabel("Frage", SwingConstants.CENTER);
-        questionLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        questionLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(questionLabel, BorderLayout.NORTH);
 
-        JPanel optionsPanel = new JPanel(new GridLayout(4, 1));
+        // Mitte: Antworten
+        JPanel optionsPanel = new JPanel(new GridLayout(4, 1, 5, 5));
+        optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         options = new JRadioButton[4];
         group = new ButtonGroup();
 
         for (int i = 0; i < 4; i++) {
             options[i] = new JRadioButton();
+            options[i].setFont(new Font("SansSerif", Font.PLAIN, 16));
+            options[i].setOpaque(false);
             group.add(options[i]);
             optionsPanel.add(options[i]);
         }
 
-        add(optionsPanel, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(optionsPanel);
+        scrollPane.setBorder(null);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(scrollPane, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout());
+        // Unten: Buttons
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         nextButton = new JButton("Weiter");
         skipButton = new JButton("Überspringen");
+
+        nextButton.setPreferredSize(new Dimension(150, 40));
+        skipButton.setPreferredSize(new Dimension(150, 40));
+        nextButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        skipButton.setFont(new Font("SansSerif", Font.BOLD, 14));
 
         nextButton.addActionListener(e -> checkAndNext());
         skipButton.addActionListener(e -> skipQuestion());
@@ -68,13 +85,13 @@ public class QuizGUI extends JFrame {
         bottomPanel.add(skipButton);
         add(bottomPanel, BorderLayout.SOUTH);
 
+        pack();
         setVisible(true);
     }
 
     private void showQuestion() {
         if (currentIndex >= questionsList.size()) {
             if (!reviewingSkipped && !skippedQuestions.isEmpty()) {
-                // Starte zweite Runde mit übersprungenen Fragen
                 questionsList = new ArrayList<>(skippedQuestions);
                 skippedQuestions.clear();
                 currentIndex = 0;
