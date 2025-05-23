@@ -16,52 +16,95 @@ public class QuizErstellenGUI extends JFrame {
     public QuizErstellenGUI() {
         setTitle("Quiz erstellen");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 500);
+        setMinimumSize(new Dimension(600, 500));
+        setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
-        JPanel topPanel = new JPanel(new GridLayout(2, 2));
-        topPanel.add(new JLabel("Quiz-Name (.txt):"));
+        // 🔝 Top Panel
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbcTop = new GridBagConstraints();
+        gbcTop.insets = new Insets(5, 5, 5, 5);
+        gbcTop.fill = GridBagConstraints.HORIZONTAL;
+        gbcTop.weightx = 1.0;
+
+        gbcTop.gridx = 0; gbcTop.gridy = 0;
+        topPanel.add(new JLabel("Quiz-Name (.txt):"), gbcTop);
+
+        gbcTop.gridx = 1;
         quizNameField = new JTextField();
-        topPanel.add(quizNameField);
+        topPanel.add(quizNameField, gbcTop);
+
+        gbcTop.gridx = 0; gbcTop.gridy = 1;
         JButton createButton = new JButton("Quiz erstellen");
-        topPanel.add(createButton);
+        topPanel.add(createButton, gbcTop);
+
+        gbcTop.gridx = 1;
         JButton loadButton = new JButton("Quiz laden");
-        topPanel.add(loadButton);
+        topPanel.add(loadButton, gbcTop);
+
         add(topPanel, BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel(new GridLayout(7, 2));
+        // 🧩 Center Panel
+        JPanel centerPanel = new JPanel(new GridBagLayout());
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weightx = 1.0;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        centerPanel.add(new JLabel("Frage:"), gbc);
+
+        gbc.gridx = 1;
         questionField = new JTextField();
-        centerPanel.add(new JLabel("Frage:"));
-        centerPanel.add(questionField);
+        gbc.weighty = 0.1;
+        centerPanel.add(questionField, gbc);
 
         for (int i = 0; i < 4; i++) {
+            gbc.gridy++;
+            gbc.gridx = 0;
+            gbc.weighty = 0;
+            centerPanel.add(new JLabel("Antwort " + (i + 1) + ":"), gbc);
+
+            gbc.gridx = 1;
             answerField[i] = new JTextField();
             radioButtons[i] = new JRadioButton("Richtige Antwort");
             buttonGroup.add(radioButtons[i]);
-            centerPanel.add(new JLabel("Antwort " + (i + 1) + ":"));
+
             JPanel antwortPanel = new JPanel(new BorderLayout());
             antwortPanel.add(answerField[i], BorderLayout.CENTER);
             antwortPanel.add(radioButtons[i], BorderLayout.EAST);
-            centerPanel.add(antwortPanel);
+            centerPanel.add(antwortPanel, gbc);
         }
 
+        gbc.gridy++;
+        gbc.gridx = 0;
         JButton addButton = new JButton("Frage hinzufügen");
-        centerPanel.add(addButton);
-        JButton saveButton = new JButton("Quiz speichern");
-        centerPanel.add(saveButton);
-        add(centerPanel, BorderLayout.CENTER);
+        centerPanel.add(addButton, gbc);
 
+        gbc.gridx = 1;
+        JButton saveButton = new JButton("Quiz speichern");
+        centerPanel.add(saveButton, gbc);
+
+        JScrollPane centerScroll = new JScrollPane(centerPanel);
+        centerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        add(centerScroll, BorderLayout.CENTER);
+
+        // 📜 Statusbereich
         statusArea = new JTextArea(5, 20);
         statusArea.setEditable(false);
-        add(new JScrollPane(statusArea), BorderLayout.SOUTH);
+        JScrollPane statusScroll = new JScrollPane(statusArea);
+        statusScroll.setPreferredSize(new Dimension(100, 100));
+        add(statusScroll, BorderLayout.SOUTH);
 
-        // ActionListener
+        // 🎯 Actions
         createButton.addActionListener(e -> {
             String name = quizNameField.getText().trim();
             if (name.isEmpty()) {
                 zeigeStatus("Fehler: Quizname darf nicht leer sein.");
             } else {
-                quizManager = new QuizErstellen(); // Neue Instanz leeren
+                quizManager = new QuizErstellen();
                 zeigeStatus("Neues Quiz gestartet: " + name + ".txt");
             }
         });
@@ -81,7 +124,6 @@ public class QuizErstellenGUI extends JFrame {
                 zeigeStatus("Fehler beim Laden: " + ex.getMessage());
             }
         });
-
 
         addButton.addActionListener(e -> {
             String question = questionField.getText().trim();
@@ -133,7 +175,8 @@ public class QuizErstellenGUI extends JFrame {
             }
         });
 
-
+        pack();
+        setLocationRelativeTo(null); // zentriert
         setVisible(true);
     }
 

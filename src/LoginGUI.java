@@ -4,18 +4,23 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.*;
 
 public class LoginGUI extends JFrame {
+
+    private Font baseFont = new Font("SansSerif", Font.PLAIN, 14);
+    private JLabel userLabel, passLabel;
+    private JTextField userField;
+    private JPasswordField passField;
+    private JButton loginButton, registrierButton, passwortVergessenButton;
 
     public LoginGUI() {
         setTitle("Quiz-Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300);
         setLocationRelativeTo(null);
-
-
-        Font schrift = new Font("SansSerif", Font.PLAIN, 14);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -24,43 +29,46 @@ public class LoginGUI extends JFrame {
 
 
         // Benutzername
-        JLabel userLabel = new JLabel("Benutzername:");
-        userLabel.setFont(schrift);
+        userLabel = new JLabel("Benutzername:");
+        userLabel.setFont(baseFont);
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(userLabel, gbc);
 
-        JTextField userField = new JTextField(20);
-        userField.setFont(schrift);
+        userField = new JTextField(20);
+        userField.setFont(baseFont);
         gbc.gridx = 1;
         gbc.gridy = 0;
         panel.add(userField, gbc);
 
         // Passwort
-        JLabel passLabel = new JLabel("Passwort:");
-        passLabel.setFont(schrift);
+        passLabel = new JLabel("Passwort:");
+        passLabel.setFont(baseFont);
         gbc.gridx = 0;
         gbc.gridy = 1;
         panel.add(passLabel, gbc);
 
-        JPasswordField passField = new JPasswordField(20);
-        passField.setFont(schrift);
+        passField = new JPasswordField(20);
+        passField.setFont(baseFont);
         gbc.gridx = 1;
         gbc.gridy = 1;
         panel.add(passField, gbc);
 
         // Buttons
-        JButton loginButton = new JButton("Login");
+        loginButton = new JButton("Login");
+        loginButton.setFont(baseFont);
         gbc.gridx = 1;
         gbc.gridy = 2;
         panel.add(loginButton, gbc);
 
-        JButton registrierButton = new JButton("Registrieren");
+        registrierButton = new JButton("Registrieren");
+        registrierButton.setFont(baseFont);
         gbc.gridx = 1;
         gbc.gridy = 3;
         panel.add(registrierButton, gbc);
 
-        JButton passwortVergessenButton = new JButton("Passwort Vergessen");
+        passwortVergessenButton = new JButton("Passwort Vergessen");
+        passwortVergessenButton.setFont(baseFont);
         gbc.gridx = 1;
         gbc.gridy = 4;
         panel.add(passwortVergessenButton, gbc);
@@ -69,6 +77,22 @@ public class LoginGUI extends JFrame {
         panel.getRootPane().setDefaultButton(loginButton);
 
         setVisible(true);
+
+        // Fenstergrößenänderung => dynamisch Schriftgrößen anpassen
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int width = getWidth();
+                int fontSize = Math.max(12, width / 40); // Skaliere Schriftgröße
+                Font resizedFont = new Font("SansSerif", Font.PLAIN, fontSize);
+                userLabel.setFont(resizedFont);
+                passLabel.setFont(resizedFont);
+                userField.setFont(resizedFont);
+                passField.setFont(resizedFont);
+                loginButton.setFont(resizedFont);
+                registrierButton.setFont(resizedFont);
+                passwortVergessenButton.setFont(resizedFont);
+            }
+        });
 
         // Aktionen
         registrierButton.addActionListener((ActionEvent e) -> {
@@ -113,16 +137,13 @@ public class LoginGUI extends JFrame {
         button.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
     }
 
-    /**
-     * Liest das verschlüsselte Passwort aus der Datei für einen Benutzer.
-     */
     private String getBenutzerPasswort(String benutzer) {
         try (BufferedReader reader = new BufferedReader(new FileReader("C:/temp/Quiz/users.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(":", 4); // Neues Format
+                String[] parts = line.split(":", 4);
                 if (parts.length >= 2 && parts[0].equals(benutzer)) {
-                    return parts[1]; // verschlüsseltes Passwort
+                    return parts[1];
                 }
             }
         } catch (IOException e) {
@@ -131,9 +152,6 @@ public class LoginGUI extends JFrame {
         return null;
     }
 
-    /**
-     * Verschlüsselt das eingegebene Passwort (muss identisch zu Profil_ErstellenGUI sein).
-     */
     private String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
