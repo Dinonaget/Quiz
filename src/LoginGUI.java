@@ -1,6 +1,7 @@
 package src;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
@@ -20,6 +21,7 @@ public class LoginGUI extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
+
 
         // Benutzername
         JLabel userLabel = new JLabel("Benutzername:");
@@ -64,6 +66,8 @@ public class LoginGUI extends JFrame {
         panel.add(passwortVergessenButton, gbc);
 
         add(panel);
+        panel.getRootPane().setDefaultButton(loginButton);
+
         setVisible(true);
 
         // Aktionen
@@ -79,15 +83,18 @@ public class LoginGUI extends JFrame {
             String gespeichertesPasswort = getBenutzerPasswort(benutzer);
             if (gespeichertesPasswort == null) {
                 JOptionPane.showMessageDialog(this, "Benutzer existiert nicht. Bitte registrieren.");
+                userField.setBorder(new LineBorder(Color.RED, 1));
+                passField.setBorder(new LineBorder(Color.RED, 1));
             } else {
-                String eingegebenVerschlüsselt = encryptPassword(passwort);
-                if (gespeichertesPasswort.equals(eingegebenVerschlüsselt)) {
-                    JOptionPane.showMessageDialog(this, "Login erfolgreich!");
+                String eingegebenVerschluesselt = encryptPassword(passwort);
+                if (gespeichertesPasswort.equals(eingegebenVerschluesselt)) {
                     Session.login(benutzer);
                     new QuizSelection();
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Falsches Passwort!");
+
+                    JOptionPane.showMessageDialog(null, "Falsches Passwort!");
+                    passField.setBorder(new LineBorder(Color.RED, 1));
                 }
             }
         });

@@ -1,6 +1,7 @@
 package src;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -92,7 +93,9 @@ public class Profil_ErstellenGUI extends JFrame {
             }
 
             if (!pass1.equals(pass2)) {
-                JOptionPane.showMessageDialog(this, "Passwörter müssen übereinstimmen!");
+                JOptionPane.showMessageDialog(null,"Passwort stimmt nicht Überein!");
+                pass1Field.setBorder(new LineBorder(Color.RED, 1));
+                pass2Field.setBorder(new LineBorder(Color.RED, 1));
                 return;
             }
 
