@@ -51,8 +51,6 @@ public class LoginGUI extends JFrame {
         JButton loginButton = new JButton("Login");
         gbc.gridx = 1;
         gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        getRootPane().setDefaultButton(loginButton);
         panel.add(loginButton, gbc);
 
         JButton registrierButton = new JButton("Registrieren");
