@@ -5,6 +5,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,8 @@ public class QuizGUI extends JFrame {
     private int currentIndex = 0;
     private int score = 0;
     private boolean reviewingSkipped = false;
+    private int qAmount;
+    private int qNumber = 0; //Count of Questions in a Quiz
 
     private JLabel questionLabel;
     private JRadioButton[] options;
@@ -90,8 +93,15 @@ public class QuizGUI extends JFrame {
     }
 
     private void showQuestion() {
+
         if (currentIndex >= questionsList.size()) {
+
+            //Show skipped questions
             if (!reviewingSkipped && !skippedQuestions.isEmpty()) {
+                //if question is skipped, remember initial "questionsList.size()"
+                if (qNumber == 0)
+                {qNumber = questionsList.size();}
+
                 questionsList = new ArrayList<>(skippedQuestions);
                 skippedQuestions.clear();
                 currentIndex = 0;
@@ -100,11 +110,10 @@ public class QuizGUI extends JFrame {
                 showQuestion();
                 return;
             }
-
             showResult();
-            return;
-        }
 
+        }
+        //Show regular questions
         Questions q = questionsList.get(currentIndex);
         questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion());
 
@@ -112,6 +121,11 @@ public class QuizGUI extends JFrame {
         for (int i = 0; i < answers.length; i++) {
             options[i].setText(answers[i]);
             options[i].setSelected(false);
+
+        }
+        //If there are no skipped questions, use current "questionsList.size()"
+        if(!reviewingSkipped) {
+            qNumber = questionsList.size();
         }
     }
 
@@ -136,6 +150,7 @@ public class QuizGUI extends JFrame {
 
         currentIndex++;
         showQuestion();
+            
     }
 
     private void skipQuestion() {
@@ -146,7 +161,7 @@ public class QuizGUI extends JFrame {
 
     private void showResult() {
         JOptionPane.showMessageDialog(this,
-                "✅ Du hast " + score + " von " + (score + skippedQuestions.size()) + " richtig beantwortet.");
+                "✅ Du hast " + score + " von " + qNumber + " richtig beantwortet.");
         dispose();
     }
 
