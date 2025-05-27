@@ -90,6 +90,7 @@ public class QuizGUI extends JFrame {
 
         pack();
         setVisible(true);
+        bottomPanel.getRootPane().setDefaultButton(nextButton);
     }
 
     private void showQuestion() {

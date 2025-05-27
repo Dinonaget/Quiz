@@ -83,6 +83,7 @@ public class QuizErstellenGUI extends JFrame {
         JButton addButton = new JButton("Frage hinzufügen");
         centerPanel.add(addButton, gbc);
 
+
         gbc.gridx = 1;
         JButton saveButton = new JButton("Quiz speichern");
         centerPanel.add(saveButton, gbc);
@@ -178,6 +179,7 @@ public class QuizErstellenGUI extends JFrame {
         pack();
         setLocationRelativeTo(null); // zentriert
         setVisible(true);
+        centerPanel.getRootPane().setDefaultButton(addButton);
     }
 
     private void zeigeStatus(String msg) {
