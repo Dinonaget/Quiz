@@ -39,6 +39,18 @@ public class Questions {
         return correctIndex;
     }
 
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public void setAnswers(String[] answers) {
+        this.answers = answers;
+    }
+
+    public void setCorrectIndex(int correctIndex) {
+        this.correctIndex = correctIndex;
+    }
+
     /**
      * Schreibt die Frage mit ID in die Datei
      */

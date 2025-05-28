@@ -20,7 +20,7 @@ public class QuizErstellenGUI extends JFrame {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
-        //  Top Panel
+        // 🔝 Top Panel
         JPanel topPanel = new JPanel(new GridBagLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbcTop = new GridBagConstraints();
@@ -35,17 +35,9 @@ public class QuizErstellenGUI extends JFrame {
         quizNameField = new JTextField();
         topPanel.add(quizNameField, gbcTop);
 
-        gbcTop.gridx = 0; gbcTop.gridy = 1;
-        JButton createButton = new JButton("Quiz erstellen");
-        topPanel.add(createButton, gbcTop);
-
-        gbcTop.gridx = 1;
-        JButton loadButton = new JButton("Quiz laden");
-        topPanel.add(loadButton, gbcTop);
-
         add(topPanel, BorderLayout.NORTH);
 
-        // Center Panel
+        // 🧩 Center Panel
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -92,40 +84,14 @@ public class QuizErstellenGUI extends JFrame {
         centerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(centerScroll, BorderLayout.CENTER);
 
-        //  Statusbereich
+        // 📜 Statusbereich
         statusArea = new JTextArea(5, 20);
         statusArea.setEditable(false);
         JScrollPane statusScroll = new JScrollPane(statusArea);
         statusScroll.setPreferredSize(new Dimension(100, 100));
         add(statusScroll, BorderLayout.SOUTH);
 
-        //  Actions
-        createButton.addActionListener(e -> {
-            String name = quizNameField.getText().trim();
-            if (name.isEmpty()) {
-                zeigeStatus("Fehler: Quizname darf nicht leer sein.");
-            } else {
-                quizManager = new QuizErstellen();
-                zeigeStatus("Neues Quiz gestartet: " + name + ".txt");
-            }
-        });
-
-        loadButton.addActionListener(e -> {
-            String name = quizNameField.getText().trim();
-            if (name.isEmpty()) {
-                zeigeStatus("Dateiname eingeben zum Laden.");
-                return;
-            }
-
-            String fullFilename = name + "." + Session.getUsername() + ".txt";
-            try {
-                quizManager.loadQuiz(fullFilename);
-                zeigeStatus("Quiz geladen: " + fullFilename);
-            } catch (IOException ex) {
-                zeigeStatus("Fehler beim Laden: " + ex.getMessage());
-            }
-        });
-
+        // 🎯 Actions
         addButton.addActionListener(e -> {
             String question = questionField.getText().trim();
             if (question.isEmpty()) {
