@@ -20,7 +20,7 @@ public class QuizErstellenGUI extends JFrame {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
-        // 🔝 Top Panel
+        //  Top Panel
         JPanel topPanel = new JPanel(new GridBagLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbcTop = new GridBagConstraints();
@@ -45,7 +45,7 @@ public class QuizErstellenGUI extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
 
-        // 🧩 Center Panel
+        // Center Panel
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -92,14 +92,14 @@ public class QuizErstellenGUI extends JFrame {
         centerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(centerScroll, BorderLayout.CENTER);
 
-        // 📜 Statusbereich
+        //  Statusbereich
         statusArea = new JTextArea(5, 20);
         statusArea.setEditable(false);
         JScrollPane statusScroll = new JScrollPane(statusArea);
         statusScroll.setPreferredSize(new Dimension(100, 100));
         add(statusScroll, BorderLayout.SOUTH);
 
-        // 🎯 Actions
+        //  Actions
         createButton.addActionListener(e -> {
             String name = quizNameField.getText().trim();
             if (name.isEmpty()) {

@@ -16,7 +16,7 @@ public class QuizGUI extends JFrame {
     private int currentIndex = 0;
     private int score = 0;
     private boolean reviewingSkipped = false;
-    private int qAmount;
+
     private int qNumber = 0; //Count of Questions in a Quiz
 
     private JLabel questionLabel;
