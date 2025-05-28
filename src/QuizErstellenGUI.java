@@ -35,14 +35,6 @@ public class QuizErstellenGUI extends JFrame {
         quizNameField = new JTextField();
         topPanel.add(quizNameField, gbcTop);
 
-        gbcTop.gridx = 0; gbcTop.gridy = 1;
-        JButton createButton = new JButton("Quiz erstellen");
-        topPanel.add(createButton, gbcTop);
-
-        gbcTop.gridx = 1;
-        JButton loadButton = new JButton("Quiz laden");
-        topPanel.add(loadButton, gbcTop);
-
         add(topPanel, BorderLayout.NORTH);
 
         // 🧩 Center Panel
@@ -83,7 +75,6 @@ public class QuizErstellenGUI extends JFrame {
         JButton addButton = new JButton("Frage hinzufügen");
         centerPanel.add(addButton, gbc);
 
-
         gbc.gridx = 1;
         JButton saveButton = new JButton("Quiz speichern");
         centerPanel.add(saveButton, gbc);
@@ -100,32 +91,6 @@ public class QuizErstellenGUI extends JFrame {
         add(statusScroll, BorderLayout.SOUTH);
 
         // 🎯 Actions
-        createButton.addActionListener(e -> {
-            String name = quizNameField.getText().trim();
-            if (name.isEmpty()) {
-                zeigeStatus("Fehler: Quizname darf nicht leer sein.");
-            } else {
-                quizManager = new QuizErstellen();
-                zeigeStatus("Neues Quiz gestartet: " + name + ".txt");
-            }
-        });
-
-        loadButton.addActionListener(e -> {
-            String name = quizNameField.getText().trim();
-            if (name.isEmpty()) {
-                zeigeStatus("Dateiname eingeben zum Laden.");
-                return;
-            }
-
-            String fullFilename = name + "." + Session.getUsername() + ".txt";
-            try {
-                quizManager.loadQuiz(fullFilename);
-                zeigeStatus("Quiz geladen: " + fullFilename);
-            } catch (IOException ex) {
-                zeigeStatus("Fehler beim Laden: " + ex.getMessage());
-            }
-        });
-
         addButton.addActionListener(e -> {
             String question = questionField.getText().trim();
             if (question.isEmpty()) {
