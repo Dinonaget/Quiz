@@ -2,6 +2,8 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -23,6 +25,8 @@ public class QuizGUI extends JFrame {
     private JRadioButton[] options;
     private ButtonGroup group;
     private JButton nextButton, skipButton;
+    private JPanel optionsPanel;
+    private Timer timer;
 
     public QuizGUI(String filename) {
         loadQuestionsFromFile(filename);
@@ -52,7 +56,7 @@ public class QuizGUI extends JFrame {
         add(questionLabel, BorderLayout.NORTH);
 
         // Mitte: Antworten
-        JPanel optionsPanel = new JPanel(new GridLayout(4, 1, 5, 5));
+        optionsPanel = new JPanel(new GridLayout(4, 1, 5, 5));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         options = new JRadioButton[4];
         group = new ButtonGroup();
@@ -60,7 +64,7 @@ public class QuizGUI extends JFrame {
         for (int i = 0; i < 4; i++) {
             options[i] = new JRadioButton();
             options[i].setFont(new Font("SansSerif", Font.PLAIN, 16));
-            options[i].setOpaque(false);
+            options[i].setOpaque(true);
             group.add(options[i]);
             optionsPanel.add(options[i]);
         }
@@ -114,6 +118,10 @@ public class QuizGUI extends JFrame {
             showResult();
 
         }
+
+        if (currentIndex >= questionsList.size()) {
+            return;
+        }
         //Show regular questions
         Questions q = questionsList.get(currentIndex);
         questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion());
@@ -122,8 +130,9 @@ public class QuizGUI extends JFrame {
         for (int i = 0; i < answers.length; i++) {
             options[i].setText(answers[i]);
             options[i].setSelected(false);
-
+            options[i].setBackground(null);
         }
+
         //If there are no skipped questions, use current "questionsList.size()"
         if(!reviewingSkipped) {
             qNumber = questionsList.size();
@@ -144,14 +153,48 @@ public class QuizGUI extends JFrame {
             return;
         }
 
+        Color correctColor;
+        Color incorrectColor;
+
+        // Theme-spezifische Farben wählen
+        if (UIManager.getLookAndFeel().getName().toLowerCase().contains("dark")) {
+            // Für Dark Themes – sattere Farben, heller Text
+            correctColor = new Color(0xA9E5B7);     // hellgrün
+            incorrectColor = new Color(0xFFB3B3);   // hellrot
+
+        } else {
+            // Für Light Themes – hellere Farben, dunkler Text
+            correctColor = new Color(0x339966);     // dunkles Grün
+            incorrectColor = new Color(0xCC3333);   // dunkles Rot
+        }
+
+
         Questions q = questionsList.get(currentIndex);
         if (selected == q.getCorrectIndex()) {
             score++;
+          //  optionsPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+            options[selected].setBackground(correctColor);
+        } else {
+        //    optionsPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+            options[selected].setBackground(incorrectColor);
+            options[q.getCorrectIndex()].setBackground(correctColor);
         }
 
-        currentIndex++;
-        showQuestion();
-            
+        nextButton.setEnabled(false);
+        skipButton.setEnabled(false);
+
+        // Timer für 3 Sekunden (3000 Millisekunden)
+        timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentIndex++;
+                showQuestion();
+                nextButton.setEnabled(true);
+                skipButton.setEnabled(true);
+            }
+        });
+        timer.setRepeats(false); // Timer soll nur einmal ausgelöst werden
+        timer.start();
     }
 
     private void skipQuestion() {
