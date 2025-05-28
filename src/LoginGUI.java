@@ -8,6 +8,11 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.*;
 
+/**
+ * Eine GUI-Klasse für Benutzerlogin, Registrierung und Passwortwiederherstellung.
+ * Diese Klasse bietet eine grafische Benutzeroberfläche für Benutzer, um sich anzumelden,
+ * zu registrieren und ihr Passwort wiederherzustellen.
+ */
 public class LoginGUI extends JFrame {
 
     private Font baseFont = new Font("SansSerif", Font.PLAIN, 14);
@@ -15,6 +20,11 @@ public class LoginGUI extends JFrame {
     private JTextField userField;
     private JPasswordField passField;
     private JButton loginButton, registrierButton, passwortVergessenButton;
+
+    /**
+     * Erstellt ein neues LoginGUI.
+     * Initialisiert die Login-GUI-Komponenten und richtet die Event-Listener ein.
+     */
 
     public LoginGUI() {
         setTitle("Quiz-Login");
@@ -81,6 +91,10 @@ public class LoginGUI extends JFrame {
         // Fenstergrößenänderung => dynamisch Schriftgrößen anpassen
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
+                /**
+                 * Passt die Schriftgröße basierend auf der Fenstergröße an.
+                 * @param e Das ComponentEvent, das durch das Ändern der Fenstergröße ausgelöst wird.
+                 */
                 int width = getWidth();
                 int fontSize = Math.max(12, width / 40); // Skaliere Schriftgröße
                 Font resizedFont = new Font("SansSerif", Font.PLAIN, fontSize);
@@ -128,6 +142,13 @@ public class LoginGUI extends JFrame {
             dispose();
         });
     }
+    /**
+     * Stylt einen Button mit der angegebenen Hintergrundfarbe, Vordergrundfarbe und Schriftart.
+     * @param button Der zu stylende Button.
+     * @param background Die Hintergrundfarbe.
+     * @param foreground Die Vordergrundfarbe.
+     * @param font Die zu verwendende Schriftart.
+     */
 
     private void styleButton(JButton button, Color background, Color foreground, Font font) {
         button.setBackground(background);
@@ -136,6 +157,11 @@ public class LoginGUI extends JFrame {
         button.setFont(font);
         button.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
     }
+    /**
+     * Ruft das Passwort für einen bestimmten Benutzer aus der Benutzerdatei ab.
+     * @param benutzer Der Benutzername, nach dem gesucht wird.
+     * @return Das Passwort, wenn der Benutzer existiert, sonst null.
+     */
 
     private String getBenutzerPasswort(String benutzer) {
         try (BufferedReader reader = new BufferedReader(new FileReader("C:/temp/Quiz/users.txt"))) {
@@ -151,6 +177,11 @@ public class LoginGUI extends JFrame {
         }
         return null;
     }
+    /**
+     * Verschlüsselt ein Passwort mit einem einfachen Verschlüsselungsalgorithmus.
+     * @param text Das zu verschlüsselnde Passwort.
+     * @return Das verschlüsselte Passwort.
+     */
 
     private String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
@@ -160,6 +191,10 @@ public class LoginGUI extends JFrame {
         }
         return result.toString().trim();
     }
+    /**
+     * Die Hauptmethode, um die Anwendung zu starten.
+     * @param args Kommandozeilenargumente (werden nicht verwendet).
+     */
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginGUI::new);

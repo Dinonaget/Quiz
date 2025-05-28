@@ -10,6 +10,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Eine GUI-Klasse für ein Quiz.
+ * Diese Klasse bietet eine grafische Benutzeroberfläche für ein Quiz,
+ * das Fragen aus einer Datei lädt und dem Benutzer ermöglicht, diese zu beantworten.
+ */
+
 public class QuizGUI extends JFrame {
     private List<Questions> questionsList = new ArrayList<>();
     private List<Questions> skippedQuestions = new LinkedList<>();
@@ -17,12 +23,17 @@ public class QuizGUI extends JFrame {
     private int score = 0;
     private boolean reviewingSkipped = false;
     private int qAmount;
-    private int qNumber = 0; //Count of Questions in a Quiz
+    private int qNumber = 0; // Zähler für Fragen in einem Quiz
 
     private JLabel questionLabel;
     private JRadioButton[] options;
     private ButtonGroup group;
     private JButton nextButton, skipButton;
+
+    /**
+     * Erstellt ein neues QuizGUI und lädt Fragen aus einer Datei.
+     * @param filename Der Name der Datei, aus der die Fragen geladen werden sollen.
+     */
 
     public QuizGUI(String filename) {
         loadQuestionsFromFile(filename);
@@ -36,6 +47,10 @@ public class QuizGUI extends JFrame {
         setupGUI();
         showQuestion();
     }
+
+    /**
+     * Richtet die grafische Benutzeroberfläche für das Quiz ein.
+     */
 
     private void setupGUI() {
         setTitle("Quiz App");
@@ -93,13 +108,17 @@ public class QuizGUI extends JFrame {
         bottomPanel.getRootPane().setDefaultButton(nextButton);
     }
 
+    /**
+     * Zeigt die aktuelle Frage an.
+     */
+
     private void showQuestion() {
 
         if (currentIndex >= questionsList.size()) {
 
-            //Show skipped questions
+            // Zeige übersprungene Fragen
             if (!reviewingSkipped && !skippedQuestions.isEmpty()) {
-                //if question is skipped, remember initial "questionsList.size()"
+                // Wenn Fragen übersprungen wurden, merke dir die ursprüngliche Anzahl der Fragen
                 if (qNumber == 0)
                 {qNumber = questionsList.size();}
 
@@ -114,7 +133,7 @@ public class QuizGUI extends JFrame {
             showResult();
 
         }
-        //Show regular questions
+        // Zeige reguläre Fragen
         Questions q = questionsList.get(currentIndex);
         questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion());
 
@@ -124,11 +143,15 @@ public class QuizGUI extends JFrame {
             options[i].setSelected(false);
 
         }
-        //If there are no skipped questions, use current "questionsList.size()"
+        // Wenn keine Fragen übersprungen wurden, verwende die aktuelle Anzahl der Fragen
         if(!reviewingSkipped) {
             qNumber = questionsList.size();
         }
     }
+
+    /**
+     * Überprüft die ausgewählte Antwort und geht zur nächsten Frage.
+     */
 
     private void checkAndNext() {
         int selected = -1;
@@ -154,17 +177,30 @@ public class QuizGUI extends JFrame {
             
     }
 
+    /**
+     * Überspringt die aktuelle Frage.
+     */
+
     private void skipQuestion() {
         skippedQuestions.add(questionsList.get(currentIndex));
         currentIndex++;
         showQuestion();
     }
 
+    /**
+     * Zeigt das Ergebnis des Quiz an.
+     */
+
     private void showResult() {
         JOptionPane.showMessageDialog(this,
                 "✅ Du hast " + score + " von " + qNumber + " richtig beantwortet.");
         dispose();
     }
+
+    /**
+     * Lädt Fragen aus einer Datei.
+     * @param filename Der Name der Datei, aus der die Fragen geladen werden sollen.
+     */
 
     private void loadQuestionsFromFile(String filename) {
         String fullPath = "C:/temp/Quiz/" + filename;

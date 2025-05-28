@@ -2,7 +2,15 @@ package src;
 
 import java.util.Scanner;
 
+/**
+ * Die Klasse Correction ist für die Überprüfung der Antwort des Benutzers auf eine gegebene Frage verantwortlich.
+ */
 public class Correction {
+    /**
+     * Die Hauptmethode zum Ausführen des Correction-Programms.
+     *
+     * @param args Kommandozeilenargumente (werden nicht verwendet).
+     */
     public static void main(String[] args) {
         QuestionCorrection question = new QuestionCorrection(
                 "How many planets are there in our solar system?",
@@ -12,8 +20,16 @@ public class Correction {
         correction.checkAnswer(question);
     }
 
+    /**
+     * Flag, um zu überprüfen, ob die Frage bereits beantwortet wurde.
+     */
     private boolean answered = false;
 
+    /**
+     * Überprüft die Antwort des Benutzers mit der richtigen Antwort der gegebenen Frage.
+     *
+     * @param question Die zu beantwortende Frage.
+     */
     public void checkAnswer(QuestionCorrection question) {
         if (question == null) {
             System.out.println("⚠️ No question available.");

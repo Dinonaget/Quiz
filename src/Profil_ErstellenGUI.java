@@ -10,11 +10,20 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+/**
+ * Eine GUI-Klasse zur Erstellung eines Benutzerprofils.
+ * Diese Klasse bietet eine grafische Benutzeroberfläche für Benutzer,
+ * um ein neues Profil mit Benutzername, Passwort, Sicherheitsfrage und Antwort zu erstellen.
+ */
 public class Profil_ErstellenGUI extends JFrame {
 
     private final Font baseFont = new Font("SansSerif", Font.PLAIN, 14);
     private final java.util.List<JComponent> componentsToResize = new ArrayList<>();
+
+    /**
+     * Erstellt ein neues Profil_ErstellenGUI.
+     * Initialisiert die GUI-Komponenten und richtet die Event-Listener ein.
+     */
 
     public Profil_ErstellenGUI() {
         setTitle("Profil erstellen");
@@ -111,6 +120,10 @@ public class Profil_ErstellenGUI extends JFrame {
         // Fenstergrößenänderung => dynamische Schriftanpassung
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
+                /**
+                 * Passt die Schriftgröße basierend auf der Fenstergröße an.
+                 * @param e Das ComponentEvent, das durch das Ändern der Fenstergröße ausgelöst wird.
+                 */
                 int width = getWidth();
                 int fontSize = Math.max(12, width / 40); // Skalierung
                 Font resizedFont = new Font("SansSerif", Font.PLAIN, fontSize);
@@ -154,6 +167,16 @@ public class Profil_ErstellenGUI extends JFrame {
         });
     }
 
+    /**
+     * Schreibt einen neuen Benutzer in die Benutzerdatei.
+     * @param filename Der Dateiname der Benutzerdatei.
+     * @param username Der Benutzername.
+     * @param password Das verschlüsselte Passwort.
+     * @param question Die Sicherheitsfrage.
+     * @param encryptedAnswer Die verschlüsselte Antwort auf die Sicherheitsfrage.
+     * @throws IOException Wenn ein Fehler beim Schreiben in die Datei auftritt.
+     */
+
     public static void writeUser(String filename, String username, String password, String question, String encryptedAnswer) throws IOException {
         new File("C:/temp/Quiz").mkdirs();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
@@ -161,6 +184,12 @@ public class Profil_ErstellenGUI extends JFrame {
             writer.newLine();
         }
     }
+    /**
+     * Verschlüsselt ein Passwort mit einem einfachen Verschlüsselungsalgorithmus.
+     * @param text Das zu verschlüsselnde Passwort.
+     * @return Das verschlüsselte Passwort.
+     */
+
 
     public static String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
@@ -171,6 +200,12 @@ public class Profil_ErstellenGUI extends JFrame {
         return result.toString().trim();
     }
 
+    /**
+     * Verschlüsselt eine Antwort mit einem einfachen Verschlüsselungsalgorithmus.
+     * @param text Die zu verschlüsselnde Antwort.
+     * @return Die verschlüsselte Antwort.
+     */
+
     public static String encryptAnswer(String text) {
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
@@ -179,6 +214,11 @@ public class Profil_ErstellenGUI extends JFrame {
         }
         return result.toString().trim();
     }
+
+    /**
+     * Die Hauptmethode, um die Anwendung zu starten.
+     * @param args Kommandozeilenargumente (werden nicht verwendet).
+     */
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Profil_ErstellenGUI::new);

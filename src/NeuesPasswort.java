@@ -8,9 +8,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Die Klasse NeuesPasswort ermöglicht das Zurücksetzen des Passworts eines Benutzers.
+ * Sie bietet zwei Konstruktoren: einen für das Zurücksetzen mit Sicherheitsfrage und einen für angemeldete Benutzer.
+ */
 public class NeuesPasswort extends JFrame {
 
-    // Constructor for resetting password with security question
+    /**
+     * Konstruktor für das Zurücksetzen des Passworts mit Sicherheitsfrage.
+     */
     public NeuesPasswort() {
         setTitle("Passwort zurücksetzen");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -137,7 +143,11 @@ public class NeuesPasswort extends JFrame {
         });
     }
 
-    // Constructor for resetting password for logged-in user
+    /**
+     * Konstruktor für das Zurücksetzen des Passworts für einen angemeldeten Benutzer.
+     *
+     * @param username Der Benutzername des angemeldeten Benutzers.
+     */
     public NeuesPasswort(String username) {
         setTitle("Passwort zurücksetzen für " + username);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -216,6 +226,16 @@ public class NeuesPasswort extends JFrame {
         });
     }
 
+    /**
+     * Setzt das Passwort eines Benutzers zurück, nachdem die Sicherheitsfrage überprüft wurde.
+     *
+     * @param filename Der Pfad zur Benutzerdatei.
+     * @param username Der Benutzername.
+     * @param answer Die Antwort auf die Sicherheitsfrage.
+     * @param newEncryptedPassword Das neue verschlüsselte Passwort.
+     * @return true, wenn das Passwort erfolgreich zurückgesetzt wurde, sonst false.
+     * @throws IOException Wenn ein Fehler beim Lesen oder Schreiben der Datei auftritt.
+     */
     public static boolean resetPasswordWithSecurityCheck(String filename, String username, String answer, String newEncryptedPassword) throws IOException {
         if (!validateUserFile(filename)) return false;
 
@@ -246,6 +266,15 @@ public class NeuesPasswort extends JFrame {
         return userFound;
     }
 
+    /**
+     * Setzt das Passwort eines Benutzers zurück, ohne die Sicherheitsfrage zu überprüfen.
+     *
+     * @param filename Der Pfad zur Benutzerdatei.
+     * @param username Der Benutzername.
+     * @param newEncryptedPassword Das neue verschlüsselte Passwort.
+     * @return true, wenn das Passwort erfolgreich zurückgesetzt wurde, sonst false.
+     * @throws IOException Wenn ein Fehler beim Lesen oder Schreiben der Datei auftritt.
+     */
     public static boolean resetPasswordWithoutSecurityCheck(String filename, String username, String newEncryptedPassword) throws IOException {
         if (!validateUserFile(filename)) return false;
 
@@ -270,6 +299,12 @@ public class NeuesPasswort extends JFrame {
         return userFound;
     }
 
+    /**
+     * Überprüft die Benutzerdatei auf Existenz, Lesbarkeit und korrekte Formatierung.
+     *
+     * @param filename Der Pfad zur Benutzerdatei.
+     * @return true, wenn die Datei gültig ist, sonst false.
+     */
     public static boolean validateUserFile(String filename) {
         File file = new File(filename);
         if (!file.exists()) {
@@ -299,6 +334,14 @@ public class NeuesPasswort extends JFrame {
         return true;
     }
 
+
+    /**
+     * Gibt die Sicherheitsfrage eines Benutzers zurück.
+     *
+     * @param filename Der Pfad zur Benutzerdatei.
+     * @param username Der Benutzername.
+     * @return Die Sicherheitsfrage des Benutzers oder null, wenn der Benutzer nicht gefunden wurde.
+     */
     public static String getSecurityQuestion(String filename, String username) {
         try {
             List<String> lines = Files.readAllLines(Paths.get(filename));
@@ -314,6 +357,12 @@ public class NeuesPasswort extends JFrame {
         return null;
     }
 
+    /**
+     * Verschlüsselt ein Passwort.
+     *
+     * @param text Das zu verschlüsselnde Passwort.
+     * @return Das verschlüsselte Passwort.
+     */
     public static String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
@@ -323,6 +372,12 @@ public class NeuesPasswort extends JFrame {
         return result.toString().trim();
     }
 
+    /**
+     * Verschlüsselt eine Antwort auf eine Sicherheitsfrage.
+     *
+     * @param text Die zu verschlüsselnde Antwort.
+     * @return Die verschlüsselte Antwort.
+     */
     public static String encryptAnswer(String text) {
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
@@ -332,6 +387,11 @@ public class NeuesPasswort extends JFrame {
         return result.toString().trim();
     }
 
+    /**
+     * Die Hauptmethode zum Starten der Anwendung.
+     *
+     * @param args Kommandozeilenargumente (werden nicht verwendet).
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new NeuesPasswort());
     }

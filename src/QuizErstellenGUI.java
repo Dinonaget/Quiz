@@ -5,6 +5,10 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Die Klasse QuizErstellenGUI bietet eine grafische Benutzeroberfläche zum Erstellen und Verwalten von Quizzes.
+ * Sie ermöglicht das Erstellen, Laden, Bearbeiten und Speichern von Quizfragen.
+ */
 public class QuizErstellenGUI extends JFrame {
     private JTextField quizNameField, questionField;
     private JTextField[] answerField = new JTextField[4];
@@ -13,6 +17,9 @@ public class QuizErstellenGUI extends JFrame {
     private QuizErstellen quizManager = new QuizErstellen();
     private JTextArea statusArea;
 
+    /**
+     * Konstruktor für die Erstellung der grafischen Benutzeroberfläche.
+     */
     public QuizErstellenGUI() {
         setTitle("Quiz erstellen");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -20,7 +27,7 @@ public class QuizErstellenGUI extends JFrame {
         setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
-        // 🔝 Top Panel
+        // 🔝 Top Panel für Quiz-Name und Aktionen
         JPanel topPanel = new JPanel(new GridBagLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbcTop = new GridBagConstraints();
@@ -28,6 +35,7 @@ public class QuizErstellenGUI extends JFrame {
         gbcTop.fill = GridBagConstraints.HORIZONTAL;
         gbcTop.weightx = 1.0;
 
+        // Label und Textfeld für den Quiz-Namen
         gbcTop.gridx = 0; gbcTop.gridy = 0;
         topPanel.add(new JLabel("Quiz-Name (.txt):"), gbcTop);
 
@@ -35,6 +43,7 @@ public class QuizErstellenGUI extends JFrame {
         quizNameField = new JTextField();
         topPanel.add(quizNameField, gbcTop);
 
+        // Buttons zum Erstellen und Laden eines Quizzes
         gbcTop.gridx = 0; gbcTop.gridy = 1;
         JButton createButton = new JButton("Quiz erstellen");
         topPanel.add(createButton, gbcTop);
@@ -45,7 +54,7 @@ public class QuizErstellenGUI extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
 
-        // 🧩 Center Panel
+        // 🧩 Center Panel für Fragen und Antworten
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -53,6 +62,7 @@ public class QuizErstellenGUI extends JFrame {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
 
+        // Label und Textfeld für die Frage
         gbc.gridx = 0; gbc.gridy = 0;
         centerPanel.add(new JLabel("Frage:"), gbc);
 
@@ -61,6 +71,7 @@ public class QuizErstellenGUI extends JFrame {
         gbc.weighty = 0.1;
         centerPanel.add(questionField, gbc);
 
+        // Textfelder und Radiobuttons für Antwortmöglichkeiten
         for (int i = 0; i < 4; i++) {
             gbc.gridy++;
             gbc.gridx = 0;
@@ -78,6 +89,7 @@ public class QuizErstellenGUI extends JFrame {
             centerPanel.add(antwortPanel, gbc);
         }
 
+        // Buttons zum Hinzufügen einer Frage und Speichern des Quizzes
         gbc.gridy++;
         gbc.gridx = 0;
         JButton addButton = new JButton("Frage hinzufügen");
@@ -92,14 +104,14 @@ public class QuizErstellenGUI extends JFrame {
         centerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(centerScroll, BorderLayout.CENTER);
 
-        // 📜 Statusbereich
+        // 📜 Statusbereich für Meldungen
         statusArea = new JTextArea(5, 20);
         statusArea.setEditable(false);
         JScrollPane statusScroll = new JScrollPane(statusArea);
         statusScroll.setPreferredSize(new Dimension(100, 100));
         add(statusScroll, BorderLayout.SOUTH);
 
-        // 🎯 Actions
+        // 🎯 Actions Listener für Buttons
         createButton.addActionListener(e -> {
             String name = quizNameField.getText().trim();
             if (name.isEmpty()) {
@@ -182,6 +194,11 @@ public class QuizErstellenGUI extends JFrame {
         centerPanel.getRootPane().setDefaultButton(addButton);
     }
 
+    /**
+     * Zeigt eine Statusmeldung im Statusbereich an.
+     *
+     * @param msg Die anzuzeigende Statusmeldung.
+     */
     private void zeigeStatus(String msg) {
         statusArea.append(msg + "\n");
     }

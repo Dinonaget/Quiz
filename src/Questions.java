@@ -5,6 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Die Klasse Questions repräsentiert eine Frage mit mehreren Antwortmöglichkeiten.
+ * Sie bietet Methoden zum Speichern der Frage in einer Datei.
+ */
 public class Questions {
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(1); // Einfache ID (beginnend bei 1)
 
@@ -14,7 +18,11 @@ public class Questions {
     private int correctIndex;
 
     /**
-     * Konstruktor für eine neue Frage
+     * Konstruktor für eine neue Frage.
+     *
+     * @param question Der Text der Frage.
+     * @param answers Die Antwortmöglichkeiten zur Frage.
+     * @param correctIndex Der Index der korrekten Antwort.
      */
     public Questions(String question, String[] answers, int correctIndex) {
         this.id = ID_GENERATOR.getAndIncrement(); // automatische Vergabe einer eindeutigen ID
@@ -40,7 +48,10 @@ public class Questions {
     }
 
     /**
-     * Schreibt die Frage mit ID in die Datei
+     * Schreibt die Frage mit ID in die angegebene Datei.
+     *
+     * @param filename Der Name der Datei, in die die Frage geschrieben werden soll.
+     * @throws IOException Wenn ein Fehler beim Schreiben in die Datei auftritt.
      */
     public void writeToFile(String filename) throws IOException {
         String dirPath = "C:/temp/Quiz";

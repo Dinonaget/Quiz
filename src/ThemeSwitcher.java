@@ -6,6 +6,11 @@ import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Eine Klasse zum Umschalten von Themes in einer Swing-Anwendung.
+ * Diese Klasse bietet eine grafische Benutzeroberfläche zur Auswahl und Anwendung verschiedener Themes.
+ */
+
 public class ThemeSwitcher {
 
     // Map zur Anzeige und Zuordnung der Themes
@@ -44,6 +49,11 @@ public class ThemeSwitcher {
         availableThemes.put("Dark/Xcode-Dark", new FlatXcodeDarkIJTheme());
     }
 
+    /**
+     * Zeigt einen Dialog zur Auswahl eines Themes an.
+     * @param frame Das JFrame, in dem der Dialog angezeigt wird.
+     */
+
     public static void showThemeDialog(JFrame frame) {
         String[] themeNames = availableThemes.keySet().toArray(new String[0]);
 
@@ -61,6 +71,12 @@ public class ThemeSwitcher {
             applyTheme(selected, frame);
         }
     }
+
+    /**
+     * Wendet das ausgewählte Theme auf das JFrame an.
+     * @param themeName Der Name des Themes, das angewendet werden soll.
+     * @param frame Das JFrame, auf das das Theme angewendet werden soll.
+     */
 
     public static void applyTheme(String themeName, JFrame frame) {
         LookAndFeel laf = availableThemes.get(themeName);

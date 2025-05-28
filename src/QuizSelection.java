@@ -8,9 +8,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Die Klasse QuizSelection bietet eine grafische Benutzeroberfläche zur Auswahl von Quizzes.
+ * Sie zeigt eine Liste von verfügbaren Quizzes an, die der Benutzer starten kann, und bietet Optionen zum Erstellen neuer Quizzes.
+ * Die Benutzeroberfläche enthält auch Menüoptionen zum Ändern des Themas, Zurücksetzen des Passworts und Abmelden.
+ */
 public class QuizSelection extends JFrame {
     private List<JButton> buttons = new ArrayList<>();
 
+    /**
+     * Konstruktor für die Erstellung der grafischen Benutzeroberfläche zur Quizauswahl.
+     * Initialisiert die Benutzeroberfläche und fügt die verschiedenen Komponenten hinzu.
+     */
     public QuizSelection() {
         super("Quiz Selection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,12 +33,14 @@ public class QuizSelection extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu einstellungenMenu = new JMenu("Einstellungen");
 
+        // Menüpunkt zum Wechseln des Themas
         JMenuItem themeItem = new JMenuItem("Theme wechseln");
         themeItem.addActionListener(e -> ThemeSwitcher.showThemeDialog(this));
         einstellungenMenu.add(themeItem);
 
         String User = Session.getUsername();
 
+        // Menüpunkt zum Zurücksetzen des Passworts
         JMenuItem resetPasswordItem = new JMenuItem("Passwort zurücksetzen");
         resetPasswordItem.addActionListener(e -> {
             // Check if the user is logged in
@@ -79,6 +90,7 @@ public class QuizSelection extends JFrame {
 
         int row = 1;
 
+        // Quiz-Dateien auflisten und Buttons erstellen
         if (files != null && files.length > 0) {
             for (File file : files) {
                 String fileName = file.getName();
@@ -94,6 +106,7 @@ public class QuizSelection extends JFrame {
                     buttonLabel = fileName; // Fallback, sollte eigentlich nicht passieren
                 }
 
+                // Button für jedes Quiz erstellen
                 JButton quizButton = new JButton(buttonLabel);
                 quizButton.setToolTipText("Start Quiz: " + buttonLabel);
                 quizButton.addActionListener((ActionEvent e) -> {
@@ -104,12 +117,14 @@ public class QuizSelection extends JFrame {
                 buttons.add(quizButton);
             }
         } else {
+            // Meldung anzeigen, wenn keine Quiz-Dateien gefunden wurden
             JLabel errorLabel = new JLabel("Keine Quiz-Dateien für Benutzer \"" + currentUser + "\" gefunden.");
             gbc.gridx = 0;
             gbc.gridy = row++;
             panel.add(errorLabel, gbc);
         }
 
+        // Button zum Erstellen eines neuen Quizzes
         JButton erstellenButton = new JButton("Neues Quiz erstellen");
         erstellenButton.setToolTipText("Öffnet das Fenster zum Erstellen eines neuen Quiz");
         erstellenButton.addActionListener(e -> {
@@ -125,6 +140,7 @@ public class QuizSelection extends JFrame {
         setLocationRelativeTo(null);
         setMaximumSize(new Dimension(maxWidth, maxHeight));
 
+        // Component Listener zum Anpassen der Schriftgröße bei Fenstergrößenänderung
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 aktualisiereFonts(label, buttons);
@@ -134,6 +150,13 @@ public class QuizSelection extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Aktualisiert die Schriftgrößen der Label und Buttons basierend auf der Fensterbreite.
+     * Dies stellt sicher, dass die Schriftgrößen proportional zur Fenstergröße sind.
+     *
+     * @param label Das Label, dessen Schriftgröße aktualisiert werden soll.
+     * @param buttons Die Liste der Buttons, deren Schriftgrößen aktualisiert werden sollen.
+     */
     private void aktualisiereFonts(JLabel label, List<JButton> buttons) {
         int breite = getWidth();
         float faktor = breite / 500.0f;
