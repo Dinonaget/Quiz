@@ -71,35 +71,39 @@ public class BearbeitenGUI extends JFrame {
             panel.add(new JLabel("Antwort " + (i + 1) + ":"), gbc);
 
             gbc.gridx = 1;
+            gbc.gridwidth = 2; // Adjust the width of the answer fields
             answerFields[i] = new JTextField();
             panel.add(answerFields[i], gbc);
 
-            gbc.gridx = 2;
+            gbc.gridx = 3;
             radioButtons[i] = new JRadioButton();
             radioGroup.add(radioButtons[i]);
             panel.add(radioButtons[i], gbc);
         }
 
-        // Löschen-Buttons
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.gridwidth = 1;
+        // Button Panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
         JButton deleteQuestionButton = new JButton("Frage löschen");
         deleteQuestionButton.addActionListener(e -> deleteQuestion());
-        panel.add(deleteQuestionButton, gbc);
+        buttonPanel.add(deleteQuestionButton);
 
-        gbc.gridx = 1;
         JButton deleteQuizButton = new JButton("Quiz löschen");
         deleteQuizButton.addActionListener(e -> deleteQuiz());
-        panel.add(deleteQuizButton, gbc);
+        buttonPanel.add(deleteQuizButton);
 
-        // Speichern-Button
+        JButton addQuestionButton = new JButton("Frage hinzufügen");
+        addQuestionButton.addActionListener(e -> addQuestion());
+        buttonPanel.add(addQuestionButton);
+
+        JButton saveButton = new JButton("Änderungen speichern");
+        saveButton.addActionListener(e -> saveChanges());
+        buttonPanel.add(saveButton);
+
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 3;
-        JButton saveButton = new JButton("Änderungen speichern");
-        saveButton.addActionListener(e -> saveChanges());
-        panel.add(saveButton, gbc);
+        panel.add(buttonPanel, gbc);
 
         // Panel hinzufügen
         JScrollPane scrollPane = new JScrollPane(panel);
@@ -219,29 +223,45 @@ public class BearbeitenGUI extends JFrame {
         }
     }
 
-    private void saveChanges() {
-        int selectedIndex = questionSelect.getSelectedIndex();
-        if (selectedIndex == -1) return;
-
-        Questions question = questionsList.get(selectedIndex);
-        question.setQuestion(questionField.getText());
+    private void addQuestion() {
+        String question = questionField.getText().trim();
+        if (question.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Fragetext darf nicht leer sein.");
+            return;
+        }
 
         String[] answers = new String[4];
         int correctIndex = -1;
         for (int i = 0; i < 4; i++) {
-            answers[i] = answerFields[i].getText();
+            answers[i] = answerFields[i].getText().trim();
+            if (answers[i].isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Antwortfeld " + (i + 1) + " ist leer.");
+                return;
+            }
             if (radioButtons[i].isSelected()) {
                 correctIndex = i;
             }
         }
 
         if (correctIndex == -1) {
-            JOptionPane.showMessageDialog(this, "Bitte wählen Sie die richtige Antwort aus.");
+            JOptionPane.showMessageDialog(this, "Bitte richtige Antwort auswählen.");
             return;
         }
 
-        question.setAnswers(answers);
-        question.setCorrectIndex(correctIndex);
+        Questions newQuestion = new Questions(question, answers, correctIndex);
+        questionsList.add(newQuestion);
+        questionSelect.addItem(question);
+        questionSelect.setSelectedItem(question);
+
+        questionField.setText("");
+        for (JTextField field : answerFields) {
+            field.setText("");
+        }
+        radioGroup.clearSelection();
+    }
+
+    private void saveChanges() {
+        if (currentQuizFile == null) return;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:/temp/Quiz/" + currentQuizFile))) {
             for (Questions q : questionsList) {
