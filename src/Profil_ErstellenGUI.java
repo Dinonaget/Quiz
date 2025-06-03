@@ -105,7 +105,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.CENTER;
         add(confirmButton, gbc);
-
+        getRootPane().setDefaultButton(confirmButton);
         setVisible(true);
 
         // Fenstergrößenänderung => dynamische Schriftanpassung

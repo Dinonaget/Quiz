@@ -99,6 +99,7 @@ public class BearbeitenGUI extends JFrame {
         JButton saveButton = new JButton("Änderungen speichern");
         saveButton.addActionListener(e -> saveChanges());
         buttonPanel.add(saveButton);
+        getRootPane().setDefaultButton(saveButton);
 
         gbc.gridy++;
         gbc.gridx = 0;

@@ -84,7 +84,6 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.CENTER;
         add(confirmButton, gbc);
-
         setVisible(true);
 
         // Sicherheitsfrage beim Username-Eingabe
@@ -177,7 +176,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         add(confirmButton, gbc);
-
+        getRootPane().setDefaultButton(confirmButton);
         setVisible(true);
 
         confirmButton.addActionListener(e -> {
