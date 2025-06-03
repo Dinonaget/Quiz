@@ -3,11 +3,14 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BearbeitenGUI extends JFrame {
+    private Font baseFont = new Font("SansSerif", Font.PLAIN, 14);
     private final JComboBox<String> quizSelect;
     private final JComboBox<String> questionSelect;
     private final JTextField questionField;
@@ -16,6 +19,16 @@ public class BearbeitenGUI extends JFrame {
     private final ButtonGroup radioGroup = new ButtonGroup();
     private final List<Questions> questionsList = new ArrayList<>();
     private String currentQuizFile;
+
+    // Labels für dynamische Schriftgrößenanpassung
+    private JLabel quizSelectLabel;
+    private JLabel questionSelectLabel;
+    private JLabel questionLabel;
+    private JLabel[] answerLabels = new JLabel[4];
+    private JButton deleteQuestionButton;
+    private JButton deleteQuizButton;
+    private JButton addQuestionButton;
+    private JButton saveButton;
 
     public BearbeitenGUI() {
         setTitle("Quiz bearbeiten");
@@ -33,22 +46,28 @@ public class BearbeitenGUI extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
-        panel.add(new JLabel("Quiz auswählen:"), gbc);
+        quizSelectLabel = new JLabel("Quiz auswählen:");
+        quizSelectLabel.setFont(baseFont);
+        panel.add(quizSelectLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         quizSelect = new JComboBox<>();
+        quizSelect.setFont(baseFont);
         quizSelect.addActionListener(e -> loadQuestions());
         panel.add(quizSelect, gbc);
 
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 1;
-        panel.add(new JLabel("Frage auswählen:"), gbc);
+        questionSelectLabel = new JLabel("Frage auswählen:");
+        questionSelectLabel.setFont(baseFont);
+        panel.add(questionSelectLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         questionSelect = new JComboBox<>();
+        questionSelect.setFont(baseFont);
         questionSelect.addActionListener(e -> displayQuestion());
         panel.add(questionSelect, gbc);
 
@@ -56,11 +75,14 @@ public class BearbeitenGUI extends JFrame {
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 1;
-        panel.add(new JLabel("Frage:"), gbc);
+        questionLabel = new JLabel("Frage:");
+        questionLabel.setFont(baseFont);
+        panel.add(questionLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         questionField = new JTextField();
+        questionField.setFont(baseFont);
         panel.add(questionField, gbc);
 
         // Antworten + RadioButtons
@@ -68,15 +90,19 @@ public class BearbeitenGUI extends JFrame {
             gbc.gridy++;
             gbc.gridx = 0;
             gbc.gridwidth = 1;
-            panel.add(new JLabel("Antwort " + (i + 1) + ":"), gbc);
+            answerLabels[i] = new JLabel("Antwort " + (i + 1) + ":");
+            answerLabels[i].setFont(baseFont);
+            panel.add(answerLabels[i], gbc);
 
             gbc.gridx = 1;
             gbc.gridwidth = 2; // Adjust the width of the answer fields
             answerFields[i] = new JTextField();
+            answerFields[i].setFont(baseFont);
             panel.add(answerFields[i], gbc);
 
             gbc.gridx = 3;
             radioButtons[i] = new JRadioButton();
+            radioButtons[i].setFont(baseFont);
             radioGroup.add(radioButtons[i]);
             panel.add(radioButtons[i], gbc);
         }
@@ -84,19 +110,23 @@ public class BearbeitenGUI extends JFrame {
         // Button Panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        JButton deleteQuestionButton = new JButton("Frage löschen");
+        deleteQuestionButton = new JButton("Frage löschen");
+        deleteQuestionButton.setFont(baseFont);
         deleteQuestionButton.addActionListener(e -> deleteQuestion());
         buttonPanel.add(deleteQuestionButton);
 
-        JButton deleteQuizButton = new JButton("Quiz löschen");
+        deleteQuizButton = new JButton("Quiz löschen");
+        deleteQuizButton.setFont(baseFont);
         deleteQuizButton.addActionListener(e -> deleteQuiz());
         buttonPanel.add(deleteQuizButton);
 
-        JButton addQuestionButton = new JButton("Frage hinzufügen");
+        addQuestionButton = new JButton("Frage hinzufügen");
+        addQuestionButton.setFont(baseFont);
         addQuestionButton.addActionListener(e -> addQuestion());
         buttonPanel.add(addQuestionButton);
 
-        JButton saveButton = new JButton("Änderungen speichern");
+        saveButton = new JButton("Änderungen speichern");
+        saveButton.setFont(baseFont);
         saveButton.addActionListener(e -> saveChanges());
         buttonPanel.add(saveButton);
 
@@ -109,6 +139,42 @@ public class BearbeitenGUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPane);
+
+        // Fenstergrößenänderung => dynamisch Schriftgrößen anpassen
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                int width = getWidth();
+                int fontSize = Math.max(12, width / 40); // Skaliere Schriftgröße
+                Font resizedFont = new Font("SansSerif", Font.PLAIN, fontSize);
+
+                // Labels
+                quizSelectLabel.setFont(resizedFont);
+                questionSelectLabel.setFont(resizedFont);
+                questionLabel.setFont(resizedFont);
+                for (JLabel label : answerLabels) {
+                    label.setFont(resizedFont);
+                }
+
+                // Text-/ComboBox-Felder
+                quizSelect.setFont(resizedFont);
+                questionSelect.setFont(resizedFont);
+                questionField.setFont(resizedFont);
+                for (JTextField field : answerFields) {
+                    field.setFont(resizedFont);
+                }
+
+                // RadioButtons
+                for (JRadioButton radio : radioButtons) {
+                    radio.setFont(resizedFont);
+                }
+
+                // Buttons
+                deleteQuestionButton.setFont(resizedFont);
+                deleteQuizButton.setFont(resizedFont);
+                addQuestionButton.setFont(resizedFont);
+                saveButton.setFont(resizedFont);
+            }
+        });
 
         loadQuizFiles();
         setVisible(true);

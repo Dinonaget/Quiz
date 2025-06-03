@@ -19,7 +19,7 @@ public class LoginGUI extends JFrame {
     public LoginGUI() {
         setTitle("Quiz-Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setSize(700, 500);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel(new GridBagLayout());
