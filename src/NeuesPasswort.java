@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * GUI class for resetting user passwords with two different modes:
- * 1. Password reset using security question for unknown users
- * 2. Direct password reset for already logged-in users
+ * GUI-Klasse zum Zurücksetzen von Benutzerpasswörtern mit zwei verschiedenen Modi:
+ * 1. Passwort zurücksetzen mit Sicherheitsfrage für unbekannte Benutzer
+ * 2. Direktes Passwort zurücksetzen für bereits angemeldete Benutzer
  */
 public class NeuesPasswort extends JFrame {
 
     /**
-     * Default constructor for resetting password with security question verification.
-     * Creates a form with username, security question, answer, and new password fields.
+     * Standardkonstruktor zum Zurücksetzen des Passworts mit Sicherheitsfrage.
+     * Erstellt ein Formular mit Benutzername, Sicherheitsfrage, Antwort und neuen Passwortfeldern.
      */
     public NeuesPasswort() {
         setTitle("Passwort zurücksetzen");
@@ -30,7 +30,7 @@ public class NeuesPasswort extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Username input field
+        // Benutzername-Eingabefeld
         JLabel userLabel = new JLabel("Benutzername:");
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -41,7 +41,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 0;
         add(userField, gbc);
 
-        // Security question display field (read-only)
+        // Sicherheitsfrage-Anzeigefeld (schreibgeschützt)
         JLabel questionLabel = new JLabel("Sicherheitsfrage:");
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -53,7 +53,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 1;
         add(questionField, gbc);
 
-        // Security question answer input field
+        // Sicherheitsfrage-Antwort-Eingabefeld
         JLabel answerLabel = new JLabel("Antwort:");
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -64,7 +64,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 2;
         add(answerField, gbc);
 
-        // New password input field
+        // Neues Passwort-Eingabefeld
         JLabel pass1Label = new JLabel("Neues Passwort:");
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -75,7 +75,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 3;
         add(pass1Field, gbc);
 
-        // Password confirmation input field
+        // Passwortbestätigungs-Eingabefeld
         JLabel pass2Label = new JLabel("Passwort bestätigen:");
         gbc.gridx = 0;
         gbc.gridy = 4;
@@ -86,7 +86,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 4;
         add(pass2Field, gbc);
 
-        // Reset button
+        // Zurücksetzen-Schaltfläche
         JButton confirmButton = new JButton("Zurücksetzen");
         gbc.gridx = 1;
         gbc.gridy = 5;
@@ -94,7 +94,7 @@ public class NeuesPasswort extends JFrame {
         add(confirmButton, gbc);
         setVisible(true);
 
-        // Load security question when username is entered
+        // Lade Sicherheitsfrage, wenn Benutzername eingegeben wird
         userField.addActionListener(e -> {
             String username = userField.getText().trim();
             String question = getSecurityQuestion("C:/temp/Quiz/users.txt", username);
@@ -105,20 +105,20 @@ public class NeuesPasswort extends JFrame {
             }
         });
 
-        // Handle password reset confirmation
+        // Behandle Passwortzurücksetzungsbestätigung
         confirmButton.addActionListener(e -> {
             String username = userField.getText().trim();
             String answer = answerField.getText().trim();
             String newPass1 = new String(pass1Field.getPassword());
             String newPass2 = new String(pass2Field.getPassword());
 
-            // Validate all required fields are filled
+            // Überprüfe, ob alle erforderlichen Felder ausgefüllt sind
             if (username.isEmpty() || answer.isEmpty() || newPass1.isEmpty() || newPass2.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Alle Felder müssen ausgefüllt sein!");
                 return;
             }
 
-            // Verify password confirmation matches
+            // Überprüfe, ob die Passwortbestätigung übereinstimmt
             if (!newPass1.equals(newPass2)) {
                 JOptionPane.showMessageDialog(this, "Passwörter stimmen nicht überein!");
                 return;
@@ -148,10 +148,10 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Constructor for resetting password for an already logged-in user.
-     * Creates a simplified form with only password and confirmation fields.
+     * Konstruktor zum Zurücksetzen des Passworts für einen bereits angemeldeten Benutzer.
+     * Erstellt ein vereinfachtes Formular mit nur Passwort- und Bestätigungsfeldern.
      *
-     * @param username the username of the currently logged-in user
+     * @param username der Benutzername des aktuell angemeldeten Benutzers
      */
     public NeuesPasswort(String username) {
         setTitle("Passwort zurücksetzen für " + username);
@@ -164,7 +164,7 @@ public class NeuesPasswort extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // New password input field
+        // Neues Passwort-Eingabefeld
         JLabel pass1Label = new JLabel("Neues Passwort:");
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -175,7 +175,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 0;
         add(pass1Field, gbc);
 
-        // Password confirmation input field
+        // Passwortbestätigungs-Eingabefeld
         JLabel pass2Label = new JLabel("Passwort bestätigen:");
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -186,7 +186,7 @@ public class NeuesPasswort extends JFrame {
         gbc.gridy = 1;
         add(pass2Field, gbc);
 
-        // Reset button
+        // Zurücksetzen-Schaltfläche
         JButton confirmButton = new JButton("Zurücksetzen");
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -195,18 +195,18 @@ public class NeuesPasswort extends JFrame {
         getRootPane().setDefaultButton(confirmButton);
         setVisible(true);
 
-        // Handle password reset for logged-in user
+        // Behandle Passwortzurücksetzung für angemeldeten Benutzer
         confirmButton.addActionListener(e -> {
             String newPass1 = new String(pass1Field.getPassword());
             String newPass2 = new String(pass2Field.getPassword());
 
-            // Validate both password fields are filled
+            // Überprüfe, ob beide Passwortfelder ausgefüllt sind
             if (newPass1.isEmpty() || newPass2.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Alle Felder müssen ausgefüllt sein!");
                 return;
             }
 
-            // Verify password confirmation matches
+            // Überprüfe, ob die Passwortbestätigung übereinstimmt
             if (!newPass1.equals(newPass2)) {
                 JOptionPane.showMessageDialog(this, "Passwörter stimmen nicht überein!");
                 return;
@@ -235,14 +235,14 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Resets a user's password after verifying their security question answer.
+     * Setzt das Passwort eines Benutzers zurück, nachdem seine Antwort auf die Sicherheitsfrage überprüft wurde.
      *
-     * @param filename the path to the user data file
-     * @param username the username whose password should be reset
-     * @param answer the user's answer to their security question
-     * @param newEncryptedPassword the new encrypted password to set
-     * @return true if the password was successfully reset, false otherwise
-     * @throws IOException if there's an error reading or writing the file
+     * @param filename der Pfad zur Benutzerdatendatei
+     * @param username der Benutzername, dessen Passwort zurückgesetzt werden soll
+     * @param answer die Antwort des Benutzers auf seine Sicherheitsfrage
+     * @param newEncryptedPassword das neue verschlüsselte Passwort, das gesetzt werden soll
+     * @return true, wenn das Passwort erfolgreich zurückgesetzt wurde, false sonst
+     * @throws IOException wenn ein Fehler beim Lesen oder Schreiben der Datei auftritt
      */
     public static boolean resetPasswordWithSecurityCheck(String filename, String username, String answer, String newEncryptedPassword) throws IOException {
         if (!validateUserFile(filename)) return false;
@@ -251,13 +251,13 @@ public class NeuesPasswort extends JFrame {
         List<String> updatedLines = new ArrayList<>();
         boolean userFound = false;
 
-        // Process each line in the user file
+        // Verarbeite jede Zeile in der Benutzerdatei
         for (String line : lines) {
             String[] parts = line.split(":", 4);
             if (parts.length == 4 && parts[0].equals(username)) {
                 String storedEncryptedAnswer = parts[3].trim();
                 String givenEncryptedAnswer = encryptAnswer(answer);
-                // Verify the security answer matches
+                // Überprüfe, ob die Sicherheitsantwort übereinstimmt
                 if (storedEncryptedAnswer.equals(givenEncryptedAnswer)) {
                     updatedLines.add(username + ":" + newEncryptedPassword + ":" + parts[2] + ":" + storedEncryptedAnswer);
                     userFound = true;
@@ -269,7 +269,7 @@ public class NeuesPasswort extends JFrame {
             }
         }
 
-        // Write updated data back to file if user was found and updated
+        // Schreibe aktualisierte Daten zurück in die Datei, wenn der Benutzer gefunden und aktualisiert wurde
         if (userFound) {
             Files.write(Paths.get(filename), updatedLines);
         }
@@ -278,13 +278,13 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Resets a user's password without security question verification (for logged-in users).
+     * Setzt das Passwort eines Benutzers zurück, ohne die Sicherheitsfrage zu überprüfen (für angemeldete Benutzer).
      *
-     * @param filename the path to the user data file
-     * @param username the username whose password should be reset
-     * @param newEncryptedPassword the new encrypted password to set
-     * @return true if the password was successfully reset, false otherwise
-     * @throws IOException if there's an error reading or writing the file
+     * @param filename der Pfad zur Benutzerdatendatei
+     * @param username der Benutzername, dessen Passwort zurückgesetzt werden soll
+     * @param newEncryptedPassword das neue verschlüsselte Passwort, das gesetzt werden soll
+     * @return true, wenn das Passwort erfolgreich zurückgesetzt wurde, false sonst
+     * @throws IOException wenn ein Fehler beim Lesen oder Schreiben der Datei auftritt
      */
     public static boolean resetPasswordWithoutSecurityCheck(String filename, String username, String newEncryptedPassword) throws IOException {
         if (!validateUserFile(filename)) return false;
@@ -293,11 +293,11 @@ public class NeuesPasswort extends JFrame {
         List<String> updatedLines = new ArrayList<>();
         boolean userFound = false;
 
-        // Process each line in the user file
+        // Verarbeite jede Zeile in der Benutzerdatei
         for (String line : lines) {
             String[] parts = line.split(":", 4);
             if (parts.length == 4 && parts[0].equals(username)) {
-                // Update password while keeping other data unchanged
+                // Aktualisiere das Passwort, während andere Daten unverändert bleiben
                 updatedLines.add(username + ":" + newEncryptedPassword + ":" + parts[2] + ":" + parts[3]);
                 userFound = true;
             } else {
@@ -305,7 +305,7 @@ public class NeuesPasswort extends JFrame {
             }
         }
 
-        // Write updated data back to file if user was found and updated
+        // Schreibe aktualisierte Daten zurück in die Datei, wenn der Benutzer gefunden und aktualisiert wurde
         if (userFound) {
             Files.write(Paths.get(filename), updatedLines);
         }
@@ -314,10 +314,10 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Validates the user data file format and accessibility.
+     * Überprüft das Format und die Zugänglichkeit der Benutzerdatendatei.
      *
-     * @param filename the path to the user data file to validate
-     * @return true if the file is valid and accessible, false otherwise
+     * @param filename der Pfad zur Benutzerdatendatei, die überprüft werden soll
+     * @return true, wenn die Datei gültig und zugänglich ist, false sonst
      */
     public static boolean validateUserFile(String filename) {
         File file = new File(filename);
@@ -332,7 +332,7 @@ public class NeuesPasswort extends JFrame {
 
         try {
             List<String> lines = Files.readAllLines(file.toPath());
-            // Validate each line has the correct format (4 colon-separated parts)
+            // Überprüfe, ob jede Zeile das richtige Format hat (4 durch Doppelpunkte getrennte Teile)
             for (String line : lines) {
                 if (line.trim().isEmpty()) continue;
                 String[] parts = line.split(":", 4);
@@ -350,11 +350,11 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Retrieves the security question for a specific username from the user file.
+     * Ruft die Sicherheitsfrage für einen bestimmten Benutzernamen aus der Benutzerdatei ab.
      *
-     * @param filename the path to the user data file
-     * @param username the username to look up
-     * @return the security question for the user, or null if user not found
+     * @param filename der Pfad zur Benutzerdatendatei
+     * @param username der Benutzername, der nachgeschlagen werden soll
+     * @return die Sicherheitsfrage für den Benutzer oder null, wenn der Benutzer nicht gefunden wurde
      */
     public static String getSecurityQuestion(String filename, String username) {
         try {
@@ -362,7 +362,7 @@ public class NeuesPasswort extends JFrame {
             for (String line : lines) {
                 String[] parts = line.split(":", 4);
                 if (parts.length == 4 && parts[0].equals(username)) {
-                    return parts[2]; // Security question is the third part
+                    return parts[2]; // Sicherheitsfrage ist der dritte Teil
                 }
             }
         } catch (IOException e) {
@@ -372,10 +372,10 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Encrypts a password using a bitwise encryption algorithm.
+     * Verschlüsselt ein Passwort mit einem bitweisen Verschlüsselungsalgorithmus.
      *
-     * @param text the plain text password to encrypt
-     * @return the encrypted password as a space-separated string of numbers
+     * @param text das zu verschlüsselnde Klartext-Passwort
+     * @return das verschlüsselte Passwort als durch Leerzeichen getrennte Zeichenfolge von Zahlen
      */
     public static String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
@@ -387,10 +387,10 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Encrypts a security question answer using a mathematical encryption algorithm.
+     * Verschlüsselt eine Antwort auf eine Sicherheitsfrage mit einem mathematischen Verschlüsselungsalgorithmus.
      *
-     * @param text the plain text answer to encrypt
-     * @return the encrypted answer as a space-separated string of numbers
+     * @param text die zu verschlüsselnde Klartext-Antwort
+     * @return die verschlüsselte Antwort als durch Leerzeichen getrennte Zeichenfolge von Zahlen
      */
     public static String encryptAnswer(String text) {
         StringBuilder result = new StringBuilder();
@@ -402,9 +402,9 @@ public class NeuesPasswort extends JFrame {
     }
 
     /**
-     * Main method to launch the password reset application.
+     * Hauptmethode zum Starten der Passwortzurücksetzungsanwendung.
      *
-     * @param args command line arguments (not used)
+     * @param args Kommandozeilenargumente (nicht verwendet)
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new NeuesPasswort());

@@ -1,45 +1,45 @@
 package src;
 
 /**
- * Manages user session state including login, logout, and username tracking.
- * This class provides static methods to handle user authentication state
- * throughout the application lifecycle.
+ * Verwaltet den Benutzersitzungsstatus einschließlich Anmeldung, Abmeldung und Benutzernamenverfolgung.
+ * Diese Klasse bietet statische Methoden zur Handhabung des Benutzerauthentifizierungsstatus
+ * während des gesamten Anwendungslebenszyklus.
  */
 public class Session {
     /**
-     * The currently logged in username, null if no user is logged in.
+     * Der aktuell angemeldete Benutzername, null, wenn kein Benutzer angemeldet ist.
      */
     private static String username = null;
 
     /**
-     * Performs user login by setting the current username.
+     * Führt die Benutzeranmeldung durch, indem der aktuelle Benutzername gesetzt wird.
      *
-     * @param user the username to log in
+     * @param user der Benutzername, der angemeldet werden soll
      */
     public static void login(String user) {
         username = user;
     }
 
     /**
-     * Performs user logout by clearing the current username.
+     * Führt die Benutzerabmeldung durch, indem der aktuelle Benutzername gelöscht wird.
      */
     public static void logout() {
         username = null;
     }
 
     /**
-     * Returns the currently logged in username.
+     * Gibt den aktuell angemeldeten Benutzernamen zurück.
      *
-     * @return the current username, or null if no user is logged in
+     * @return der aktuelle Benutzername oder null, wenn kein Benutzer angemeldet ist
      */
     public static String getUsername() {
         return username;
     }
 
     /**
-     * Checks whether a user is currently logged in.
+     * Überprüft, ob ein Benutzer aktuell angemeldet ist.
      *
-     * @return true if a user is logged in, false otherwise
+     * @return true, wenn ein Benutzer angemeldet ist, false sonst
      */
     public static boolean isLoggedIn() {
         return username != null;

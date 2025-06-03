@@ -1,22 +1,22 @@
 package src;
 
 /**
- * Represents a quiz question with its correct answer and provides functionality
- * to validate user responses against the correct answer.
+ * Stellt eine Quizfrage mit ihrer richtigen Antwort dar und bietet Funktionalität,
+ * um Benutzerantworten gegen die richtige Antwort zu validieren.
  */
 public class QuestionCorrection {
 
-    /** The text content of the question */
+    /** Der Textinhalt der Frage */
     String text;
 
-    /** The correct answer for this question */
+    /** Die richtige Antwort auf diese Frage */
     String correctAnswer;
 
     /**
-     * Constructs a new QuestionCorrection with the specified question text and correct answer.
+     * Erstellt eine neue QuestionCorrection mit dem angegebenen Fragetext und der richtigen Antwort.
      *
-     * @param text the question text
-     * @param correctAnswer the correct answer for this question
+     * @param text der Fragetext
+     * @param correctAnswer die richtige Antwort auf diese Frage
      */
     public QuestionCorrection(String text, String correctAnswer) {
         this.text = text;
@@ -24,11 +24,11 @@ public class QuestionCorrection {
     }
 
     /**
-     * Checks if the provided user answer matches the correct answer.
-     * The comparison is case-insensitive and handles null input safely.
+     * Überprüft, ob die vom Benutzer bereitgestellte Antwort mit der richtigen Antwort übereinstimmt.
+     * Der Vergleich ist nicht case-sensitiv und behandelt Null-Eingaben sicher.
      *
-     * @param userAnswer the answer provided by the user
-     * @return true if the user answer matches the correct answer (case-insensitive), false otherwise
+     * @param userAnswer die vom Benutzer bereitgestellte Antwort
+     * @return true, wenn die Benutzerantwort mit der richtigen Antwort übereinstimmt (nicht case-sensitiv), false sonst
      */
     public boolean isCorrect(String userAnswer) {
         return userAnswer != null && userAnswer.equalsIgnoreCase(correctAnswer);

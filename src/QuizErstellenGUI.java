@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * GUI for creating a new quiz with multiple-choice questions.
- * Allows the user to input questions, answers, and select the correct one.
- * After saving, it updates the parent {@link QuizSelection} window.
+ * GUI zum Erstellen eines neuen Quiz mit Multiple-Choice-Fragen.
+ * Ermöglicht dem Benutzer, Fragen, Antworten einzugeben und die richtige Antwort auszuwählen.
+ * Nach dem Speichern wird das übergeordnete QuizSelection-Fenster aktualisiert.
  */
 public class QuizErstellenGUI extends JFrame {
 
@@ -21,9 +21,9 @@ public class QuizErstellenGUI extends JFrame {
     private final QuizSelection parent;
 
     /**
-     * Constructs the GUI for quiz creation.
+     * Erstellt die GUI zur Quiz-Erstellung.
      *
-     * @param parent The parent QuizSelection window to refresh after saving.
+     * @param parent Das übergeordnete QuizSelection-Fenster, das nach dem Speichern aktualisiert wird.
      */
     public QuizErstellenGUI(QuizSelection parent) {
         this.parent = parent;
@@ -35,7 +35,7 @@ public class QuizErstellenGUI extends JFrame {
         setLayout(new BorderLayout());
 
         /**
-         * Top panel for quiz name input
+         * Oberes Panel für die Eingabe des Quiz-Namens
          */
         JPanel topPanel = new JPanel(new GridBagLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -55,7 +55,7 @@ public class QuizErstellenGUI extends JFrame {
         add(topPanel, BorderLayout.NORTH);
 
         /**
-         * Center panel for question and answer input
+         * Mittleres Panel für die Eingabe von Fragen und Antworten
          */
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -91,7 +91,7 @@ public class QuizErstellenGUI extends JFrame {
         }
 
         /**
-         * Buttons for adding question and saving quiz
+         * Schaltflächen zum Hinzufügen von Fragen und Speichern des Quiz
          */
         gbc.gridy++;
         gbc.gridx = 0;
@@ -107,7 +107,7 @@ public class QuizErstellenGUI extends JFrame {
         add(centerScroll, BorderLayout.CENTER);
 
         /**
-         * Status area for displaying messages
+         * Statusbereich zur Anzeige von Nachrichten
          */
         statusArea = new JTextArea(5, 20);
         statusArea.setEditable(false);
@@ -116,11 +116,11 @@ public class QuizErstellenGUI extends JFrame {
         add(statusScroll, BorderLayout.SOUTH);
 
         /**
-         * Action listeners setup
+         * Einrichtung der Aktions-Listener
          */
 
         /**
-         * Adds a new question to the quiz
+         * Fügt eine neue Frage zum Quiz hinzu
          */
         addButton.addActionListener(e -> {
             String question = questionField.getText().trim();
@@ -159,7 +159,7 @@ public class QuizErstellenGUI extends JFrame {
         });
 
         /**
-         * Saves the quiz to file and updates the QuizSelection window
+         * Speichert das Quiz in einer Datei und aktualisiert das QuizSelection-Fenster
          */
         saveButton.addActionListener(e -> {
             String name = quizNameField.getText().trim();
@@ -192,15 +192,15 @@ public class QuizErstellenGUI extends JFrame {
         setVisible(true);
 
         /**
-         * Set default button for Enter key
+         * Setze Standard-Schaltfläche für die Eingabetaste
          */
         centerPanel.getRootPane().setDefaultButton(addButton);
     }
 
     /**
-     * Appends a message to the status area.
+     * Fügt eine Nachricht zum Statusbereich hinzu.
      *
-     * @param msg Message to display.
+     * @param msg Nachricht, die angezeigt werden soll.
      */
     private void zeigeStatus(String msg) {
         statusArea.append(msg + "\n");

@@ -12,20 +12,20 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * GUI class for creating user profiles with username, password, and security question.
- * Provides a form with dynamic font scaling based on window size.
+ * GUI-Klasse zum Erstellen von Benutzerprofilen mit Benutzername, Passwort und Sicherheitsfrage.
+ * Bietet ein Formular mit dynamischer Schriftgrößenanpassung basierend auf der Fenstergröße.
  */
 public class Profil_ErstellenGUI extends JFrame {
 
-    /** Base font used for all GUI components */
+    /** Basis-Schriftart, die für alle GUI-Komponenten verwendet wird */
     private final Font baseFont = new Font("SansSerif", Font.PLAIN, 14);
 
-    /** List of components that will be resized when window size changes */
+    /** Liste der Komponenten, die bei einer Fenstergrößenänderung skaliert werden */
     private final java.util.List<JComponent> componentsToResize = new ArrayList<>();
 
     /**
-     * Constructor that initializes and displays the profile creation GUI.
-     * Sets up all form fields, buttons, and event listeners.
+     * Konstruktor, der die GUI für die Profilerstellung initialisiert und anzeigt.
+     * Richtet alle Formularfelder, Schaltflächen und Event-Listener ein.
      */
     public Profil_ErstellenGUI() {
         setTitle("Profil erstellen");
@@ -38,7 +38,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Username field
+        // Benutzername-Feld
         JLabel userLabel = new JLabel("Benutzername:");
         userLabel.setFont(baseFont);
         componentsToResize.add(userLabel);
@@ -52,7 +52,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridx = 1;
         add(userField, gbc);
 
-        // Password field
+        // Passwort-Feld
         JLabel pass1Label = new JLabel("Passwort:");
         pass1Label.setFont(baseFont);
         componentsToResize.add(pass1Label);
@@ -66,7 +66,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridx = 1;
         add(pass1Field, gbc);
 
-        // Password confirmation field
+        // Passwortbestätigungs-Feld
         JLabel pass2Label = new JLabel("Passwort bestätigen:");
         pass2Label.setFont(baseFont);
         componentsToResize.add(pass2Label);
@@ -80,7 +80,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridx = 1;
         add(pass2Field, gbc);
 
-        // Security question field
+        // Sicherheitsfrage-Feld
         JLabel questionLabel = new JLabel("Sicherheitsfrage:");
         questionLabel.setFont(baseFont);
         componentsToResize.add(questionLabel);
@@ -94,7 +94,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridx = 1;
         add(questionField, gbc);
 
-        // Security answer field
+        // Sicherheitsantwort-Feld
         JLabel answerLabel = new JLabel("Antwort:");
         answerLabel.setFont(baseFont);
         componentsToResize.add(answerLabel);
@@ -108,7 +108,7 @@ public class Profil_ErstellenGUI extends JFrame {
         gbc.gridx = 1;
         add(answerField, gbc);
 
-        // Confirm button
+        // Bestätigen-Schaltfläche
         JButton confirmButton = new JButton("Bestätigen");
         confirmButton.setFont(baseFont);
         componentsToResize.add(confirmButton);
@@ -119,13 +119,13 @@ public class Profil_ErstellenGUI extends JFrame {
         getRootPane().setDefaultButton(confirmButton);
         setVisible(true);
 
-        // Component listener for dynamic font scaling on window resize
+        // Komponenten-Listener für dynamische Schriftgrößenanpassung bei Fenstergrößenänderung
         addComponentListener(new ComponentAdapter() {
             /**
-             * Adjusts font size of all components when window is resized.
-             * Font size scales based on window width.
+             * Passt die Schriftgröße aller Komponenten an, wenn das Fenster skaliert wird.
+             * Die Schriftgröße wird basierend auf der Fensterbreite skaliert.
              *
-             * @param e the component event triggered by window resize
+             * @param e das durch die Fenstergrößenänderung ausgelöste Komponentenereignis
              */
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
@@ -137,7 +137,7 @@ public class Profil_ErstellenGUI extends JFrame {
             }
         });
 
-        // Action listener for confirm button
+        // Aktions-Listener für die Bestätigen-Schaltfläche
         confirmButton.addActionListener(e -> {
             String username = userField.getText().trim();
             String pass1 = new String(pass1Field.getPassword());
@@ -172,15 +172,15 @@ public class Profil_ErstellenGUI extends JFrame {
     }
 
     /**
-     * Writes user data to a file in colon-separated format.
-     * Creates the directory structure if it doesn't exist.
+     * Schreibt Benutzerdaten in eine Datei im durch Doppelpunkte getrennten Format.
+     * Erstellt die Verzeichnisstruktur, falls sie nicht existiert.
      *
-     * @param filename the path to the file where user data will be stored
-     * @param username the username to be saved
-     * @param password the encrypted password
-     * @param question the security question
-     * @param encryptedAnswer the encrypted security answer
-     * @throws IOException if an error occurs during file writing
+     * @param filename der Pfad zur Datei, in der die Benutzerdaten gespeichert werden
+     * @param username der zu speichernde Benutzername
+     * @param password das verschlüsselte Passwort
+     * @param question die Sicherheitsfrage
+     * @param encryptedAnswer die verschlüsselte Sicherheitsantwort
+     * @throws IOException wenn ein Fehler beim Schreiben der Datei auftritt
      */
     public static void writeUser(String filename, String username, String password, String question, String encryptedAnswer) throws IOException {
         new File("C:/temp/Quiz").mkdirs();
@@ -191,11 +191,11 @@ public class Profil_ErstellenGUI extends JFrame {
     }
 
     /**
-     * Encrypts a password using a custom bit manipulation algorithm.
-     * Each character is processed with left shift, right shift, and XOR operations.
+     * Verschlüsselt ein Passwort mit einem benutzerdefinierten Bit-Manipulationsalgorithmus.
+     * Jedes Zeichen wird mit Linksverschiebung, Rechtsverschiebung und XOR-Operationen verarbeitet.
      *
-     * @param text the password text to encrypt
-     * @return the encrypted password as space-separated numeric values
+     * @param text der zu verschlüsselnde Passworttext
+     * @return das verschlüsselte Passwort als durch Leerzeichen getrennte numerische Werte
      */
     public static String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
@@ -207,11 +207,11 @@ public class Profil_ErstellenGUI extends JFrame {
     }
 
     /**
-     * Encrypts an answer using a simple mathematical transformation.
-     * Each character is multiplied by 7, added to 13, and modulo 256 is applied.
+     * Verschlüsselt eine Antwort mit einer einfachen mathematischen Transformation.
+     * Jedes Zeichen wird mit 7 multipliziert, 13 addiert und modulo 256 angewendet.
      *
-     * @param text the answer text to encrypt
-     * @return the encrypted answer as space-separated numeric values
+     * @param text der zu verschlüsselnde Antworttext
+     * @return die verschlüsselte Antwort als durch Leerzeichen getrennte numerische Werte
      */
     public static String encryptAnswer(String text) {
         StringBuilder result = new StringBuilder();
@@ -223,10 +223,10 @@ public class Profil_ErstellenGUI extends JFrame {
     }
 
     /**
-     * Main method that launches the profile creation GUI.
-     * Uses SwingUtilities.invokeLater for thread safety.
+     * Hauptmethode, die die GUI zur Profilerstellung startet.
+     * Verwende SwingUtilities.invokeLater für Thread-Sicherheit.
      *
-     * @param args command line arguments (not used)
+     * @param args Kommandozeilenargumente (nicht verwendet)
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Profil_ErstellenGUI::new);

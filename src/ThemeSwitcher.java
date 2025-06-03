@@ -7,19 +7,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Utility class for switching between different Look and Feel themes.
- * Provides a collection of light and dark themes and methods to apply them.
+ * Dienstprogrammklasse zum Wechseln zwischen verschiedenen Look-and-Feel-Themes.
+ * Bietet eine Sammlung von hellen und dunklen Themes und Methoden zu deren Anwendung.
  */
 public class ThemeSwitcher {
 
     /**
-     * Map for displaying and assigning themes
+     * Map zum Anzeigen und Zuweisen von Themes
      */
     private static final Map<String, LookAndFeel> availableThemes = new LinkedHashMap<>();
 
     static {
         /**
-         * Light Themes
+         * Helle Themes
          */
         availableThemes.put("Light/Flat Light", new FlatLightLaf());
         availableThemes.put("Light/Arc", new FlatArcIJTheme());
@@ -29,7 +29,7 @@ public class ThemeSwitcher {
         availableThemes.put("Light/Solarized Light", new FlatSolarizedLightIJTheme());
 
         /**
-         * Dark Themes
+         * Dunkle Themes
          */
         availableThemes.put("Dark/Vueston", new FlatVuesionIJTheme());
         availableThemes.put("Dark/Flat Dark", new FlatDarkLaf());
@@ -55,9 +55,9 @@ public class ThemeSwitcher {
     }
 
     /**
-     * Shows a dialog for theme selection and applies the chosen theme.
+     * Zeigt einen Dialog zur Theme-Auswahl an und wendet das gewählte Theme an.
      *
-     * @param frame The parent frame for the dialog and theme application
+     * @param frame Das übergeordnete Frame für den Dialog und die Theme-Anwendung
      */
     public static void showThemeDialog(JFrame frame) {
         String[] themeNames = availableThemes.keySet().toArray(new String[0]);
@@ -78,11 +78,11 @@ public class ThemeSwitcher {
     }
 
     /**
-     * Applies the specified theme to the given frame.
-     * Updates the Look and Feel and refreshes the UI components.
+     * Wendet das angegebene Theme auf das gegebene Frame an.
+     * Aktualisiert das Look-and-Feel und aktualisiert die UI-Komponenten.
      *
-     * @param themeName The name of the theme to apply
-     * @param frame The frame to apply the theme to
+     * @param themeName Der Name des anzuwendenden Themes
+     * @param frame Das Frame, auf das das Theme angewendet werden soll
      */
     public static void applyTheme(String themeName, JFrame frame) {
         LookAndFeel laf = availableThemes.get(themeName);

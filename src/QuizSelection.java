@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Main GUI window for selecting and managing quizzes.
- * Provides functionality to start quizzes, create new ones, edit existing ones,
- * and manage user settings like themes and passwords.
+ * Haupt-GUI-Fenster zur Auswahl und Verwaltung von Quizzen.
+ * Bietet Funktionalität zum Starten von Quizzen, Erstellen neuer Quizze, Bearbeiten bestehender Quizze
+ * und Verwalten von Benutzereinstellungen wie Themen und Passwörtern.
  */
 public class QuizSelection extends JFrame {
     private List<JButton> buttons = new ArrayList<>();
@@ -17,8 +17,8 @@ public class QuizSelection extends JFrame {
     private JLabel label;
 
     /**
-     * Constructs the QuizSelection window with menu bar and quiz list.
-     * Sets up the user interface for quiz management and selection.
+     * Erstellt das QuizSelection-Fenster mit Menüleiste und Quizliste.
+     * Richtet die Benutzeroberfläche für die Quizverwaltung und -auswahl ein.
      */
     public QuizSelection() {
         super("Quiz Selection");
@@ -30,7 +30,7 @@ public class QuizSelection extends JFrame {
         int maxHeight = 800;
 
         /**
-         * Menu bar setup
+         * Menüleiste einrichten
          */
         JMenuBar menuBar = new JMenuBar();
         JMenu einstellungenMenu = new JMenu("Einstellungen");
@@ -85,8 +85,8 @@ public class QuizSelection extends JFrame {
     }
 
     /**
-     * Refreshes the content of the quiz selection panel.
-     * Clears all existing elements and rebuilds the interface with current quiz files.
+     * Aktualisiert den Inhalt des Quiz-Auswahl-Panels.
+     * Löscht alle vorhandenen Elemente und baut die Benutzeroberfläche mit den aktuellen Quiz-Dateien neu auf.
      */
     public void refreshContent() {
         panel.removeAll();
@@ -97,8 +97,8 @@ public class QuizSelection extends JFrame {
     }
 
     /**
-     * Builds the main content of the quiz selection interface.
-     * Scans for quiz files and creates buttons for available quizzes.
+     * Erstellt den Hauptinhalt der Quiz-Auswahl-Benutzeroberfläche.
+     * Durchsucht nach Quiz-Dateien und erstellt Schaltflächen für verfügbare Quizze.
      */
     private void baueInhalt() {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -160,8 +160,8 @@ public class QuizSelection extends JFrame {
     }
 
     /**
-     * Updates font sizes based on current window width.
-     * Scales fonts proportionally to maintain readability at different window sizes.
+     * Aktualisiert die Schriftgrößen basierend auf der aktuellen Fensterbreite.
+     * Skaliert die Schriften proportional, um die Lesbarkeit bei verschiedenen Fenstergrößen zu erhalten.
      */
     private void aktualisiereFonts() {
         int breite = getWidth();

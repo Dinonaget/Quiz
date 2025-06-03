@@ -10,38 +10,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * GUI class for editing quiz questions and managing quiz files.
- * Provides functionality to load, edit, add, delete questions and quizzes.
+ * GUI-Klasse zum Bearbeiten von Quizfragen und Verwalten von Quizdateien.
+ * Bietet Funktionalität zum Laden, Bearbeiten, Hinzufügen, Löschen von Fragen und Quizzen.
  */
 public class BearbeitenGUI extends JFrame {
-    /** Base font used for all UI components */
+    /** Basis-Schriftart, die für alle UI-Komponenten verwendet wird */
     private Font baseFont = new Font("SansSerif", Font.PLAIN, 14);
 
-    /** Dropdown for selecting quiz files */
+    /** Dropdown zur Auswahl von Quizdateien */
     private final JComboBox<String> quizSelect;
 
-    /** Dropdown for selecting individual questions within a quiz */
+    /** Dropdown zur Auswahl einzelner Fragen innerhalb eines Quiz */
     private final JComboBox<String> questionSelect;
 
-    /** Text field for editing the question text */
+    /** Textfeld zum Bearbeiten des Fragetextes */
     private final JTextField questionField;
 
-    /** Array of text fields for the four answer options */
+    /** Array von Textfeldern für die vier Antwortoptionen */
     private final JTextField[] answerFields = new JTextField[4];
 
-    /** Array of radio buttons to select the correct answer */
+    /** Array von Radiobuttons zur Auswahl der richtigen Antwort */
     private final JRadioButton[] radioButtons = new JRadioButton[4];
 
-    /** Button group to ensure only one radio button can be selected */
+    /** Buttongruppe, um sicherzustellen, dass nur ein Radiobutton ausgewählt werden kann */
     private final ButtonGroup radioGroup = new ButtonGroup();
 
-    /** List storing all questions from the currently selected quiz */
+    /** Liste, die alle Fragen aus dem aktuell ausgewählten Quiz speichert */
     private final List<Questions> questionsList = new ArrayList<>();
 
-    /** Name of the currently loaded quiz file */
+    /** Name der aktuell geladenen Quizdatei */
     private String currentQuizFile;
 
-    /** Labels for dynamic font size adjustment */
+    /** Labels für dynamische Schriftgrößenanpassung */
     private JLabel quizSelectLabel;
     private JLabel questionSelectLabel;
     private JLabel questionLabel;
@@ -52,7 +52,7 @@ public class BearbeitenGUI extends JFrame {
     private JButton saveButton;
 
     /**
-     * Constructor that initializes the GUI components and sets up the layout.
+     * Konstruktor, der die GUI-Komponenten initialisiert und das Layout einrichtet.
      */
     public BearbeitenGUI() {
         setTitle("Quiz bearbeiten");
@@ -60,14 +60,14 @@ public class BearbeitenGUI extends JFrame {
         setSize(800, 600);
         setLocationRelativeTo(null);
 
-        // Create main panel with GridBagLayout for flexible component arrangement
+        // Erstelle Hauptpanel mit GridBagLayout für flexible Komponentenanordnung
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Quiz selection dropdown
+        // Quiz-Auswahl-Dropdown
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
@@ -82,7 +82,7 @@ public class BearbeitenGUI extends JFrame {
         quizSelect.addActionListener(e -> loadQuestions());
         panel.add(quizSelect, gbc);
 
-        // Question selection dropdown
+        // Frage-Auswahl-Dropdown
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 1;
@@ -97,7 +97,7 @@ public class BearbeitenGUI extends JFrame {
         questionSelect.addActionListener(e -> displayQuestion());
         panel.add(questionSelect, gbc);
 
-        // Question text field
+        // Frage-Textfeld
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 1;
@@ -111,7 +111,7 @@ public class BearbeitenGUI extends JFrame {
         questionField.setFont(baseFont);
         panel.add(questionField, gbc);
 
-        // Create answer fields and corresponding radio buttons
+        // Erstelle Antwortfelder und entsprechende Radiobuttons
         for (int i = 0; i < 4; i++) {
             gbc.gridy++;
             gbc.gridx = 0;
@@ -133,7 +133,7 @@ public class BearbeitenGUI extends JFrame {
             panel.add(radioButtons[i], gbc);
         }
 
-        // Create button panel with action buttons
+        // Erstelle Button-Panel mit Aktionsbuttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         deleteQuestionButton = new JButton("Frage löschen");
@@ -162,19 +162,19 @@ public class BearbeitenGUI extends JFrame {
         gbc.gridwidth = 3;
         panel.add(buttonPanel, gbc);
 
-        // Add scroll pane for better usability with large content
+        // Füge Scroll-Panel für bessere Benutzerfreundlichkeit bei großem Inhalt hinzu
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPane);
 
-        // Add component listener for dynamic font scaling based on window size
+        // Füge Komponenten-Listener für dynamische Schriftgrößenanpassung basierend auf Fenstergröße hinzu
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
-                int fontSize = Math.max(12, width / 40); // Scale font size based on window width
+                int fontSize = Math.max(12, width / 40); // Skaliere Schriftgröße basierend auf Fensterbreite
                 Font resizedFont = new Font("SansSerif", Font.PLAIN, fontSize);
 
-                // Update font for all labels
+                // Aktualisiere Schriftart für alle Labels
                 quizSelectLabel.setFont(resizedFont);
                 questionSelectLabel.setFont(resizedFont);
                 questionLabel.setFont(resizedFont);
@@ -182,7 +182,7 @@ public class BearbeitenGUI extends JFrame {
                     label.setFont(resizedFont);
                 }
 
-                // Update font for input components
+                // Aktualisiere Schriftart für Eingabekomponenten
                 quizSelect.setFont(resizedFont);
                 questionSelect.setFont(resizedFont);
                 questionField.setFont(resizedFont);
@@ -190,12 +190,12 @@ public class BearbeitenGUI extends JFrame {
                     field.setFont(resizedFont);
                 }
 
-                // Update font for radio buttons
+                // Aktualisiere Schriftart für Radiobuttons
                 for (JRadioButton radio : radioButtons) {
                     radio.setFont(resizedFont);
                 }
 
-                // Update font for action buttons
+                // Aktualisiere Schriftart für Aktionsbuttons
                 deleteQuestionButton.setFont(resizedFont);
                 deleteQuizButton.setFont(resizedFont);
                 addQuestionButton.setFont(resizedFont);
@@ -208,7 +208,7 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Loads all quiz files from the quiz directory and populates the quiz selection dropdown.
+     * Lädt alle Quizdateien aus dem Quizverzeichnis und füllt das Quiz-Auswahl-Dropdown.
      */
     private void loadQuizFiles() {
         File quizDir = new File("C:/temp/Quiz");
@@ -227,7 +227,7 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Loads all questions from the selected quiz file and populates the question dropdown.
+     * Lädt alle Fragen aus der ausgewählten Quizdatei und füllt das Frage-Dropdown.
      */
     private void loadQuestions() {
         String selectedQuiz = (String) quizSelect.getSelectedItem();
@@ -243,10 +243,10 @@ public class BearbeitenGUI extends JFrame {
             List<String> answers = new ArrayList<>();
             int correctIndex = -1;
 
-            // Parse the quiz file line by line
+            // Parse die Quizdatei zeilenweise
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("ID:")) {
-                    // Save the previous question if it exists
+                    // Speichere die vorherige Frage, falls vorhanden
                     if (question != null) {
                         questionsList.add(new Questions(question, answers.toArray(new String[0]), correctIndex));
                         questionSelect.addItem(question);
@@ -262,7 +262,7 @@ public class BearbeitenGUI extends JFrame {
                 }
             }
 
-            // Add the last question if it exists
+            // Füge die letzte Frage hinzu, falls vorhanden
             if (question != null) {
                 questionsList.add(new Questions(question, answers.toArray(new String[0]), correctIndex));
                 questionSelect.addItem(question);
@@ -273,7 +273,7 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Displays the selected question and its answers in the input fields.
+     * Zeigt die ausgewählte Frage und ihre Antworten in den Eingabefeldern an.
      */
     private void displayQuestion() {
         int selectedIndex = questionSelect.getSelectedIndex();
@@ -290,7 +290,7 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Deletes the currently selected question from the quiz.
+     * Löscht die aktuell ausgewählte Frage aus dem Quiz.
      */
     private void deleteQuestion() {
         int selectedIndex = questionSelect.getSelectedIndex();
@@ -299,7 +299,7 @@ public class BearbeitenGUI extends JFrame {
         questionsList.remove(selectedIndex);
         questionSelect.removeItemAt(selectedIndex);
 
-        // Clear fields if no questions remain, otherwise display the first question
+        // Lösche Felder, wenn keine Fragen mehr vorhanden sind, andernfalls zeige die erste Frage an
         if (questionsList.isEmpty()) {
             questionField.setText("");
             for (JTextField field : answerFields) {
@@ -313,7 +313,7 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Deletes the entire currently selected quiz file after user confirmation.
+     * Löscht die gesamte aktuell ausgewählte Quizdatei nach Bestätigung durch den Benutzer.
      */
     private void deleteQuiz() {
         int response = JOptionPane.showConfirmDialog(this, "Sind Sie sicher, dass Sie dieses Quiz löschen möchten?", "Quiz löschen", JOptionPane.YES_NO_OPTION);
@@ -321,7 +321,7 @@ public class BearbeitenGUI extends JFrame {
 
         File file = new File("C:/temp/Quiz/" + currentQuizFile);
         if (file.delete()) {
-            // Remove quiz from dropdown and clear all fields
+            // Entferne Quiz aus Dropdown und lösche alle Felder
             quizSelect.removeItem(currentQuizFile);
             questionsList.clear();
             questionSelect.removeAllItems();
@@ -337,7 +337,7 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Adds a new question to the current quiz based on the input field values.
+     * Fügt eine neue Frage zum aktuellen Quiz basierend auf den Werten der Eingabefelder hinzu.
      */
     private void addQuestion() {
         String question = questionField.getText().trim();
@@ -349,7 +349,7 @@ public class BearbeitenGUI extends JFrame {
         String[] answers = new String[4];
         int correctIndex = -1;
 
-        // Validate all answer fields and find the selected correct answer
+        // Überprüfe alle Antwortfelder und finde die ausgewählte richtige Antwort
         for (int i = 0; i < 4; i++) {
             answers[i] = answerFields[i].getText().trim();
             if (answers[i].isEmpty()) {
@@ -366,13 +366,13 @@ public class BearbeitenGUI extends JFrame {
             return;
         }
 
-        // Create new question and add it to the list
+        // Erstelle neue Frage und füge sie der Liste hinzu
         Questions newQuestion = new Questions(question, answers, correctIndex);
         questionsList.add(newQuestion);
         questionSelect.addItem(question);
         questionSelect.setSelectedItem(question);
 
-        // Clear input fields after adding the question
+        // Lösche Eingabefelder nach dem Hinzufügen der Frage
         questionField.setText("");
         for (JTextField field : answerFields) {
             field.setText("");
@@ -381,13 +381,13 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Saves all changes made to the current quiz back to the file.
+     * Speichert alle Änderungen, die am aktuellen Quiz vorgenommen wurden, zurück in die Datei.
      */
     private void saveChanges() {
         if (currentQuizFile == null) return;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("C:/temp/Quiz/" + currentQuizFile))) {
-            // Write all questions in the proper format
+            // Schreibe alle Fragen im richtigen Format
             for (Questions q : questionsList) {
                 writer.write("ID:" + q.getId());
                 writer.newLine();

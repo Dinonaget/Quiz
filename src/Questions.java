@@ -6,32 +6,32 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Represents a multiple-choice question with four possible answers and tracks the correct answer.
- * Each question is assigned a unique ID automatically upon creation.
+ * Stellt eine Multiple-Choice-Frage mit vier möglichen Antworten dar und verfolgt die richtige Antwort.
+ * Jeder Frage wird bei der Erstellung automatisch eine eindeutige ID zugewiesen.
  */
 public class Questions {
 
-    /** Static ID generator that ensures each question gets a unique sequential ID starting from 1 */
+    /** Statischer ID-Generator, der sicherstellt, dass jede Frage eine eindeutige sequentielle ID erhält, beginnend bei 1 */
     private static final AtomicInteger ID_GENERATOR = new AtomicInteger(1);
 
-    /** The unique numerical identifier for this question */
+    /** Die eindeutige numerische Kennung für diese Frage */
     private final int id;
 
-    /** The text content of the question */
+    /** Der Textinhalt der Frage */
     private String question;
 
-    /** Array containing four possible answers for the question */
+    /** Array, das vier mögliche Antworten für die Frage enthält */
     private String[] answers = new String[4];
 
-    /** Index of the correct answer in the answers array (0-3) */
+    /** Index der richtigen Antwort im Antworten-Array (0-3) */
     private int correctIndex;
 
     /**
-     * Constructs a new question with the specified content and automatically assigns a unique ID.
+     * Erstellt eine neue Frage mit dem angegebenen Inhalt und weist automatisch eine eindeutige ID zu.
      *
-     * @param question the text of the question
-     * @param answers array of four possible answers
-     * @param correctIndex the index (0-3) of the correct answer in the answers array
+     * @param question der Text der Frage
+     * @param answers Array von vier möglichen Antworten
+     * @param correctIndex der Index (0-3) der richtigen Antwort im Antworten-Array
      */
     public Questions(String question, String[] answers, int correctIndex) {
         this.id = ID_GENERATOR.getAndIncrement();
@@ -41,75 +41,75 @@ public class Questions {
     }
 
     /**
-     * Gets the unique ID of this question.
+     * Gibt die eindeutige ID dieser Frage zurück.
      *
-     * @return the numerical ID of the question
+     * @return die numerische ID der Frage
      */
     public int getId() {
         return id;
     }
 
     /**
-     * Gets the text content of the question.
+     * Gibt den Textinhalt der Frage zurück.
      *
-     * @return the question text
+     * @return der Fragetext
      */
     public String getQuestion() {
         return question;
     }
 
     /**
-     * Gets the array of possible answers for this question.
+     * Gibt das Array der möglichen Antworten für diese Frage zurück.
      *
-     * @return array containing four possible answers
+     * @return Array, das vier mögliche Antworten enthält
      */
     public String[] getAnswers() {
         return answers;
     }
 
     /**
-     * Gets the index of the correct answer.
+     * Gibt den Index der richtigen Antwort zurück.
      *
-     * @return the index (0-3) of the correct answer in the answers array
+     * @return der Index (0-3) der richtigen Antwort im Antworten-Array
      */
     public int getCorrectIndex() {
         return correctIndex;
     }
 
     /**
-     * Sets the text content of the question.
+     * Setzt den Textinhalt der Frage.
      *
-     * @param question the new question text
+     * @param question der neue Fragetext
      */
     public void setQuestion(String question) {
         this.question = question;
     }
 
     /**
-     * Sets the array of possible answers for this question.
+     * Setzt das Array der möglichen Antworten für diese Frage.
      *
-     * @param answers array of four possible answers
+     * @param answers Array von vier möglichen Antworten
      */
     public void setAnswers(String[] answers) {
         this.answers = answers;
     }
 
     /**
-     * Sets the index of the correct answer.
+     * Setzt den Index der richtigen Antwort.
      *
-     * @param correctIndex the index (0-3) of the correct answer in the answers array
+     * @param correctIndex der Index (0-3) der richtigen Antwort im Antworten-Array
      */
     public void setCorrectIndex(int correctIndex) {
         this.correctIndex = correctIndex;
     }
 
     /**
-     * Writes the question data to a file in a specific format.
-     * Creates the directory structure if it doesn't exist.
-     * The format includes: ID, question text, four answers, and correct index.
+     * Schreibt die Fragendaten in eine Datei in einem bestimmten Format.
+     * Erstellt die Verzeichnisstruktur, falls sie nicht existiert.
+     * Das Format umfasst: ID, Fragetext, vier Antworten und den Index der richtigen Antwort.
      *
-     * @param filename the name of the file to write to (will be placed in C:/temp/Quiz/)
-     * @throws IOException if an error occurs during file writing or directory creation
+     * @param filename der Name der Datei, in die geschrieben werden soll (wird in C:/temp/Quiz/ abgelegt)
+     * @throws IOException wenn ein Fehler beim Schreiben oder Erstellen des Verzeichnisses auftritt
      */
     public void writeToFile(String filename) throws IOException {
         String dirPath = "C:/temp/Quiz";

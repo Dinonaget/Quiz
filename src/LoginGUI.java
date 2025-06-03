@@ -9,38 +9,38 @@ import java.awt.event.ComponentEvent;
 import java.io.*;
 
 /**
- * LoginGUI class creates the login interface for the Quiz application.
- * Provides user authentication functionality with dynamic font scaling.
+ * Die LoginGUI-Klasse erstellt die Login-Schnittstelle für die Quiz-Anwendung.
+ * Bietet Benutzerauthentifizierungsfunktionalität mit dynamischer Schriftgrößenanpassung.
  */
 public class LoginGUI extends JFrame {
 
-    /** Base font used for all GUI components */
+    /** Basis-Schriftart, die für alle GUI-Komponenten verwendet wird */
     private Font baseFont = new Font("SansSerif", Font.PLAIN, 14);
 
-    /** GUI components for user interface */
+    /** GUI-Komponenten für die Benutzeroberfläche */
     private JLabel userLabel, passLabel;
     private JTextField userField;
     private JPasswordField passField;
     private JButton loginButton, registrierButton, passwortVergessenButton;
 
     /**
-     * Constructor that initializes and displays the login GUI.
-     * Sets up all components, event listeners, and dynamic font scaling.
+     * Konstruktor, der die Login-GUI initialisiert und anzeigt.
+     * Richtet alle Komponenten, Event-Listener und dynamische Schriftgrößenanpassung ein.
      */
     public LoginGUI() {
-        // Configure main window properties
+        // Konfiguriere die Haupfenstereigenschaften
         setTitle("Quiz-Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(700, 500);
         setLocationRelativeTo(null);
 
-        // Create main panel with GridBagLayout for flexible component positioning
+        // Erstelle das Hauptpanel mit GridBagLayout für flexible Komponentenpositionierung
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Username input section
+        // Benutzername-Eingabebereich
         userLabel = new JLabel("Benutzername:");
         userLabel.setFont(baseFont);
         gbc.gridx = 0;
@@ -53,7 +53,7 @@ public class LoginGUI extends JFrame {
         gbc.gridy = 0;
         panel.add(userField, gbc);
 
-        // Password input section
+        // Passwort-Eingabebereich
         passLabel = new JLabel("Passwort:");
         passLabel.setFont(baseFont);
         gbc.gridx = 0;
@@ -66,7 +66,7 @@ public class LoginGUI extends JFrame {
         gbc.gridy = 1;
         panel.add(passField, gbc);
 
-        // Button section
+        // Schaltflächenbereich
         loginButton = new JButton("Login");
         loginButton.setFont(baseFont);
         gbc.gridx = 1;
@@ -85,20 +85,20 @@ public class LoginGUI extends JFrame {
         gbc.gridy = 4;
         panel.add(passwortVergessenButton, gbc);
 
-        // Add panel to frame and set login button as default
+        // Füge das Panel zum Frame hinzu und setze die Login-Schaltfläche als Standard
         add(panel);
         panel.getRootPane().setDefaultButton(loginButton);
 
         setVisible(true);
 
-        // Dynamic font scaling based on window size
+        // Dynamische Schriftgrößenanpassung basierend auf der Fenstergröße
         addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 int width = getWidth();
-                int fontSize = Math.max(12, width / 40); // Scale font size with minimum of 12
+                int fontSize = Math.max(12, width / 40); // Skaliere Schriftgröße mit einem Minimum von 12
                 Font resizedFont = new Font("SansSerif", Font.PLAIN, fontSize);
 
-                // Apply scaled font to all components
+                // Wende die skalierte Schriftart auf alle Komponenten an
                 userLabel.setFont(resizedFont);
                 passLabel.setFont(resizedFont);
                 userField.setFont(resizedFont);
@@ -109,43 +109,43 @@ public class LoginGUI extends JFrame {
             }
         });
 
-        // Event handlers for buttons
+        // Event-Handler für Schaltflächen
 
-        // Registration button - opens profile creation GUI
+        // Registrierungs-Schaltfläche - öffnet die GUI zur Profilerstellung
         registrierButton.addActionListener((ActionEvent e) -> {
             new Profil_ErstellenGUI();
             dispose();
         });
 
-        // Login button - handles user authentication
+        // Login-Schaltfläche - behandelt die Benutzerauthentifizierung
         loginButton.addActionListener((ActionEvent e) -> {
             String benutzer = userField.getText().trim();
             String passwort = new String(passField.getPassword());
 
-            // Retrieve stored password for the user
+            // Rufe das gespeicherte Passwort für den Benutzer ab
             String gespeichertesPasswort = getBenutzerPasswort(benutzer);
             if (gespeichertesPasswort == null) {
-                // User doesn't exist
+                // Benutzer existiert nicht
                 JOptionPane.showMessageDialog(this, "Benutzer existiert nicht. Bitte registrieren.");
                 userField.setBorder(new LineBorder(Color.RED, 1));
                 passField.setBorder(new LineBorder(Color.RED, 1));
             } else {
-                // Verify password
+                // Überprüfe das Passwort
                 String eingegebenVerschluesselt = encryptPassword(passwort);
                 if (gespeichertesPasswort.equals(eingegebenVerschluesselt)) {
-                    // Successful login
+                    // Erfolgreiche Anmeldung
                     Session.login(benutzer);
                     new QuizSelection();
                     dispose();
                 } else {
-                    // Wrong password
+                    // Falsches Passwort
                     JOptionPane.showMessageDialog(null, "Falsches Passwort!");
                     passField.setBorder(new LineBorder(Color.RED, 1));
                 }
             }
         });
 
-        // Forgot password button - opens password reset GUI
+        // Passwort vergessen-Schaltfläche - öffnet die GUI zum Zurücksetzen des Passworts
         passwortVergessenButton.addActionListener((ActionEvent e) -> {
             new NeuesPasswort();
             dispose();
@@ -153,13 +153,13 @@ public class LoginGUI extends JFrame {
     }
 
     /**
-     * Styles a button with specified colors and font.
-     * Currently unused but provides button styling functionality.
+     * Stilisiert eine Schaltfläche mit angegebenen Farben und Schriftart.
+     * Derzeit nicht verwendet, bietet jedoch Schaltflächen-Stilfunktionalität.
      *
-     * @param button The button to style
-     * @param background Background color
-     * @param foreground Text color
-     * @param font Font to apply
+     * @param button Die zu stilende Schaltfläche
+     * @param background Hintergrundfarbe
+     * @param foreground Textfarbe
+     * @param font Anzuwendende Schriftart
      */
     private void styleButton(JButton button, Color background, Color foreground, Font font) {
         button.setBackground(background);
@@ -170,38 +170,38 @@ public class LoginGUI extends JFrame {
     }
 
     /**
-     * Retrieves the stored password for a given username from the users file.
+     * Ruft das gespeicherte Passwort für einen gegebenen Benutzernamen aus der Benutzerdatei ab.
      *
-     * @param benutzer The username to look up
-     * @return The encrypted password if user exists, null otherwise
+     * @param benutzer Der nachzuschlagende Benutzername
+     * @return Das verschlüsselte Passwort, wenn der Benutzer existiert, sonst null
      */
     private String getBenutzerPasswort(String benutzer) {
         try (BufferedReader reader = new BufferedReader(new FileReader("C:/temp/Quiz/users.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Parse user data (format: username:password:...)
+                // Parse Benutzerdaten (Format: Benutzername:Passwort:...)
                 String[] parts = line.split(":", 4);
                 if (parts.length >= 2 && parts[0].equals(benutzer)) {
-                    return parts[1]; // Return encrypted password
+                    return parts[1]; // Gib das verschlüsselte Passwort zurück
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null; // User not found
+        return null; // Benutzer nicht gefunden
     }
 
     /**
-     * Encrypts a password using a simple bit-shifting algorithm.
-     * Uses XOR and bit shifting operations for basic encryption.
+     * Verschlüsselt ein Passwort mit einem einfachen Bit-Verschiebungsalgorithmus.
+     * Verwendet XOR- und Bit-Verschiebeoperationen für die grundlegende Verschlüsselung.
      *
-     * @param text The plain text password to encrypt
-     * @return The encrypted password as a space-separated string of numbers
+     * @param text Der zu verschlüsselnde Klartext-Passwort
+     * @return Das verschlüsselte Passwort als durch Leerzeichen getrennte Zeichenfolge von Zahlen
      */
     private String encryptPassword(String text) {
         StringBuilder result = new StringBuilder();
         for (char c : text.toCharArray()) {
-            // Apply bit shifting and XOR operations
+            // Wende Bit-Verschiebung und XOR-Operationen an
             int value = ((c << 5) ^ (c >> 3)) % 256;
             result.append(value).append(" ");
         }
@@ -209,9 +209,9 @@ public class LoginGUI extends JFrame {
     }
 
     /**
-     * Main method for standalone testing of the LoginGUI.
+     * Hauptmethode zum eigenständigen Testen der LoginGUI.
      *
-     * @param args Command line arguments (not used)
+     * @param args Kommandozeilenargumente (nicht verwendet)
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(LoginGUI::new);

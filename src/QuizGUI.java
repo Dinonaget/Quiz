@@ -13,8 +13,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * GUI for conducting a quiz with multiple-choice questions.
- * Supports skipping questions, reviewing skipped questions, and displays results.
+ * GUI zum Durchführen eines Quiz mit Multiple-Choice-Fragen.
+ * Unterstützt das Überspringen von Fragen, das Überprüfen übersprungener Fragen und zeigt Ergebnisse an.
  */
 public class QuizGUI extends JFrame {
     private List<Questions> questionsList = new ArrayList<>();
@@ -24,7 +24,7 @@ public class QuizGUI extends JFrame {
     private boolean reviewingSkipped = false;
 
     /**
-     * Count of questions in a quiz
+     * Anzahl der Fragen in einem Quiz
      */
     private int qNumber = 0;
 
@@ -36,9 +36,9 @@ public class QuizGUI extends JFrame {
     private Timer timer;
 
     /**
-     * Constructs a new QuizGUI with questions loaded from the specified file.
+     * Erstellt eine neue QuizGUI mit Fragen, die aus der angegebenen Datei geladen werden.
      *
-     * @param filename The name of the file containing quiz questions
+     * @param filename Der Name der Datei, die die Quizfragen enthält
      */
     public QuizGUI(String filename) {
         loadQuestionsFromFile(filename);
@@ -54,7 +54,7 @@ public class QuizGUI extends JFrame {
     }
 
     /**
-     * Sets up the graphical user interface components.
+     * Richtet die grafischen Benutzeroberflächenkomponenten ein.
      */
     private void setupGUI() {
         setTitle("Quiz App");
@@ -65,7 +65,7 @@ public class QuizGUI extends JFrame {
         setLayout(new BorderLayout(10, 10));
 
         /**
-         * Top section: Question display
+         * Oberer Abschnitt: Fragenanzeige
          */
         questionLabel = new JLabel("Frage", SwingConstants.CENTER);
         questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
@@ -73,7 +73,7 @@ public class QuizGUI extends JFrame {
         add(questionLabel, BorderLayout.NORTH);
 
         /**
-         * Middle section: Answer options
+         * Mittlerer Abschnitt: Antwortoptionen
          */
         optionsPanel = new JPanel(new GridLayout(4, 1, 5, 5));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
@@ -95,7 +95,7 @@ public class QuizGUI extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
 
         /**
-         * Bottom section: Control buttons
+         * Unterer Abschnitt: Steuerungsschaltflächen
          */
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         nextButton = new JButton("Weiter");
@@ -119,19 +119,19 @@ public class QuizGUI extends JFrame {
     }
 
     /**
-     * Displays the current question and its answer options.
-     * If all questions are completed, shows skipped questions or final results.
+     * Zeigt die aktuelle Frage und ihre Antwortoptionen an.
+     * Wenn alle Fragen abgeschlossen sind, werden übersprungene Fragen oder die Endergebnisse angezeigt.
      */
     private void showQuestion() {
 
         if (currentIndex >= questionsList.size()) {
 
             /**
-             * Show skipped questions if available
+             * Zeige übersprungene Fragen an, falls vorhanden
              */
             if (!reviewingSkipped && !skippedQuestions.isEmpty()) {
                 /**
-                 * If question is skipped, remember initial "questionsList.size()"
+                 * Wenn eine Frage übersprungen wird, merke dir die anfängliche "questionsList.size()"
                  */
                 if (qNumber == 0)
                 {qNumber = questionsList.size();}
@@ -152,7 +152,7 @@ public class QuizGUI extends JFrame {
             return;
         }
         /**
-         * Show regular questions
+         * Zeige reguläre Fragen an
          */
         Questions q = questionsList.get(currentIndex);
         questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion());
@@ -165,7 +165,7 @@ public class QuizGUI extends JFrame {
         }
 
         /**
-         * If there are no skipped questions, use current "questionsList.size()"
+         * Wenn es keine übersprungenen Fragen gibt, verwende die aktuelle "questionsList.size()"
          */
         if(!reviewingSkipped) {
             qNumber = questionsList.size();
@@ -173,8 +173,8 @@ public class QuizGUI extends JFrame {
     }
 
     /**
-     * Checks the selected answer and proceeds to the next question.
-     * Displays correct/incorrect feedback with color coding.
+     * Überprüft die ausgewählte Antwort und geht zur nächsten Frage über.
+     * Zeigt Feedback zu richtigen/falschen Antworten mit Farbcodierung an.
      */
     private void checkAndNext() {
         int selected = -1;
@@ -194,25 +194,23 @@ public class QuizGUI extends JFrame {
         Color incorrectColor;
 
         /**
-         * Choose theme-specific colors
+         * Wähle themenspezifische Farben
          */
         if (UIManager.getLookAndFeel().getName().toLowerCase().contains("light")) {
             /**
-             * For dark themes - richer colors, lighter text
+             * Für dunkle Themen - reichhaltigere Farben, hellere Texte
              */
-            correctColor = new Color(0xA9E5B7);     // light green
-            incorrectColor = new Color(0xFFB3B3);   // light red
+            correctColor = new Color(0xA9E5B7);     // hellgrün
+            incorrectColor = new Color(0xFFB3B3);   // hellrot
 
         } else {
             /**
-             * For light themes - lighter colors, darker text
+             * Für helle Themen - hellere Farben, dunklere Texte
              */
-            correctColor = new Color(0x339966);     // dark green
-            incorrectColor = new Color(0xCC3333);   // dark red
-
+            correctColor = new Color(0x339966);     // dunkelgrün
+            incorrectColor = new Color(0xCC3333);   // dunkelrot
 
         }
-
 
         Questions q = questionsList.get(currentIndex);
         if (selected == q.getCorrectIndex()) {
@@ -227,7 +225,7 @@ public class QuizGUI extends JFrame {
         skipButton.setEnabled(false);
 
         /**
-         * Timer for 3 seconds (3000 milliseconds)
+         * Timer für 3 Sekunden (3000 Millisekunden)
          */
         timer = new Timer(3000, new ActionListener() {
             @Override
@@ -243,7 +241,7 @@ public class QuizGUI extends JFrame {
     }
 
     /**
-     * Skips the current question and adds it to the skipped questions list.
+     * Überspringt die aktuelle Frage und fügt sie der Liste der übersprungenen Fragen hinzu.
      */
     private void skipQuestion() {
         skippedQuestions.add(questionsList.get(currentIndex));
@@ -252,7 +250,7 @@ public class QuizGUI extends JFrame {
     }
 
     /**
-     * Displays the final quiz results showing score and total questions.
+     * Zeigt die endgültigen Quiz-Ergebnisse an, die die Punktzahl und die Gesamtzahl der Fragen anzeigen.
      */
     private void showResult() {
         JOptionPane.showMessageDialog(this,
@@ -261,10 +259,10 @@ public class QuizGUI extends JFrame {
     }
 
     /**
-     * Loads questions from the specified file.
-     * File format expected: ID, question, 4 answers, correct answer index.
+     * Lädt Fragen aus der angegebenen Datei.
+     * Erwartetes Dateiformat: ID, Frage, 4 Antworten, Index der richtigen Antwort.
      *
-     * @param filename The name of the file to load questions from
+     * @param filename Der Name der Datei, aus der die Fragen geladen werden sollen
      */
     private void loadQuestionsFromFile(String filename) {
         String fullPath = "C:/temp/Quiz/" + filename;
