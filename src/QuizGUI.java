@@ -12,6 +12,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * GUI for conducting a quiz with multiple-choice questions.
+ * Supports skipping questions, reviewing skipped questions, and displays results.
+ */
 public class QuizGUI extends JFrame {
     private List<Questions> questionsList = new ArrayList<>();
     private List<Questions> skippedQuestions = new LinkedList<>();
@@ -19,7 +23,10 @@ public class QuizGUI extends JFrame {
     private int score = 0;
     private boolean reviewingSkipped = false;
 
-    private int qNumber = 0; //Count of Questions in a Quiz
+    /**
+     * Count of questions in a quiz
+     */
+    private int qNumber = 0;
 
     private JLabel questionLabel;
     private JRadioButton[] options;
@@ -28,6 +35,11 @@ public class QuizGUI extends JFrame {
     private JPanel optionsPanel;
     private Timer timer;
 
+    /**
+     * Constructs a new QuizGUI with questions loaded from the specified file.
+     *
+     * @param filename The name of the file containing quiz questions
+     */
     public QuizGUI(String filename) {
         loadQuestionsFromFile(filename);
 
@@ -41,6 +53,9 @@ public class QuizGUI extends JFrame {
         showQuestion();
     }
 
+    /**
+     * Sets up the graphical user interface components.
+     */
     private void setupGUI() {
         setTitle("Quiz App");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -49,13 +64,17 @@ public class QuizGUI extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // Oben: Frage
+        /**
+         * Top section: Question display
+         */
         questionLabel = new JLabel("Frage", SwingConstants.CENTER);
         questionLabel.setFont(new Font("Arial", Font.BOLD, 18));
         questionLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(questionLabel, BorderLayout.NORTH);
 
-        // Mitte: Antworten
+        /**
+         * Middle section: Answer options
+         */
         optionsPanel = new JPanel(new GridLayout(4, 1, 5, 5));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         options = new JRadioButton[4];
@@ -75,7 +94,9 @@ public class QuizGUI extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Unten: Buttons
+        /**
+         * Bottom section: Control buttons
+         */
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         nextButton = new JButton("Weiter");
         skipButton = new JButton("Überspringen");
@@ -97,13 +118,21 @@ public class QuizGUI extends JFrame {
         bottomPanel.getRootPane().setDefaultButton(nextButton);
     }
 
+    /**
+     * Displays the current question and its answer options.
+     * If all questions are completed, shows skipped questions or final results.
+     */
     private void showQuestion() {
 
         if (currentIndex >= questionsList.size()) {
 
-            //Show skipped questions
+            /**
+             * Show skipped questions if available
+             */
             if (!reviewingSkipped && !skippedQuestions.isEmpty()) {
-                //if question is skipped, remember initial "questionsList.size()"
+                /**
+                 * If question is skipped, remember initial "questionsList.size()"
+                 */
                 if (qNumber == 0)
                 {qNumber = questionsList.size();}
 
@@ -111,7 +140,7 @@ public class QuizGUI extends JFrame {
                 skippedQuestions.clear();
                 currentIndex = 0;
                 reviewingSkipped = true;
-                JOptionPane.showMessageDialog(this, "⏭ Jetzt folgen die übersprungenen Fragen.");
+                JOptionPane.showMessageDialog(this, "Jetzt folgen die übersprungenen Fragen.");
                 showQuestion();
                 return;
             }
@@ -122,7 +151,9 @@ public class QuizGUI extends JFrame {
         if (currentIndex >= questionsList.size()) {
             return;
         }
-        //Show regular questions
+        /**
+         * Show regular questions
+         */
         Questions q = questionsList.get(currentIndex);
         questionLabel.setText("Frage " + (currentIndex + 1) + ": " + q.getQuestion());
 
@@ -133,12 +164,18 @@ public class QuizGUI extends JFrame {
             options[i].setBackground(null);
         }
 
-        //If there are no skipped questions, use current "questionsList.size()"
+        /**
+         * If there are no skipped questions, use current "questionsList.size()"
+         */
         if(!reviewingSkipped) {
             qNumber = questionsList.size();
         }
     }
 
+    /**
+     * Checks the selected answer and proceeds to the next question.
+     * Displays correct/incorrect feedback with color coding.
+     */
     private void checkAndNext() {
         int selected = -1;
         for (int i = 0; i < options.length; i++) {
@@ -156,26 +193,32 @@ public class QuizGUI extends JFrame {
         Color correctColor;
         Color incorrectColor;
 
-        // Theme-spezifische Farben wählen
-        if (UIManager.getLookAndFeel().getName().toLowerCase().contains("dark")) {
-            // Für Dark Themes – sattere Farben, heller Text
-            correctColor = new Color(0xA9E5B7);     // hellgrün
-            incorrectColor = new Color(0xFFB3B3);   // hellrot
+        /**
+         * Choose theme-specific colors
+         */
+        if (UIManager.getLookAndFeel().getName().toLowerCase().contains("light")) {
+            /**
+             * For dark themes - richer colors, lighter text
+             */
+            correctColor = new Color(0xA9E5B7);     // light green
+            incorrectColor = new Color(0xFFB3B3);   // light red
 
         } else {
-            // Für Light Themes – hellere Farben, dunkler Text
-            correctColor = new Color(0x339966);     // dunkles Grün
-            incorrectColor = new Color(0xCC3333);   // dunkles Rot
+            /**
+             * For light themes - lighter colors, darker text
+             */
+            correctColor = new Color(0x339966);     // dark green
+            incorrectColor = new Color(0xCC3333);   // dark red
+
+
         }
 
 
         Questions q = questionsList.get(currentIndex);
         if (selected == q.getCorrectIndex()) {
             score++;
-          //  optionsPanel.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
             options[selected].setBackground(correctColor);
         } else {
-        //    optionsPanel.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
             options[selected].setBackground(incorrectColor);
             options[q.getCorrectIndex()].setBackground(correctColor);
         }
@@ -183,7 +226,9 @@ public class QuizGUI extends JFrame {
         nextButton.setEnabled(false);
         skipButton.setEnabled(false);
 
-        // Timer für 3 Sekunden (3000 Millisekunden)
+        /**
+         * Timer for 3 seconds (3000 milliseconds)
+         */
         timer = new Timer(3000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -193,22 +238,34 @@ public class QuizGUI extends JFrame {
                 skipButton.setEnabled(true);
             }
         });
-        timer.setRepeats(false); // Timer soll nur einmal ausgelöst werden
+        timer.setRepeats(false);
         timer.start();
     }
 
+    /**
+     * Skips the current question and adds it to the skipped questions list.
+     */
     private void skipQuestion() {
         skippedQuestions.add(questionsList.get(currentIndex));
         currentIndex++;
         showQuestion();
     }
 
+    /**
+     * Displays the final quiz results showing score and total questions.
+     */
     private void showResult() {
         JOptionPane.showMessageDialog(this,
-                "✅ Du hast " + score + " von " + qNumber + " richtig beantwortet.");
+                "Du hast " + score + " von " + qNumber + " richtig beantwortet.");
         dispose();
     }
 
+    /**
+     * Loads questions from the specified file.
+     * File format expected: ID, question, 4 answers, correct answer index.
+     *
+     * @param filename The name of the file to load questions from
+     */
     private void loadQuestionsFromFile(String filename) {
         String fullPath = "C:/temp/Quiz/" + filename;
         try {
@@ -235,7 +292,7 @@ public class QuizGUI extends JFrame {
                 questionsList.add(q);
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "❌ Fehler beim Lesen der Datei:\n" + fullPath + "\n" + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Fehler beim Lesen der Datei:\n" + fullPath + "\n" + e.getMessage());
         }
     }
 }

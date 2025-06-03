@@ -1,41 +1,45 @@
 package src;
 
 /**
- * Verwaltet die Benutzersitzung (Login, Logout, Benutzername).
+ * Manages user session state including login, logout, and username tracking.
+ * This class provides static methods to handle user authentication state
+ * throughout the application lifecycle.
  */
 public class Session {
+    /**
+     * The currently logged in username, null if no user is logged in.
+     */
     private static String username = null;
 
     /**
-     * Führt einen Login durch.
+     * Performs user login by setting the current username.
      *
-     * @param user der Benutzername
+     * @param user the username to log in
      */
     public static void login(String user) {
         username = user;
     }
 
     /**
-     * Führt einen Logout durch.
+     * Performs user logout by clearing the current username.
      */
     public static void logout() {
         username = null;
     }
 
     /**
-     * Gibt den aktuell eingeloggten Benutzernamen zurück.
-     * Falls kein Benutzer eingeloggt ist, wird der Systemname verwendet.
+     * Returns the currently logged in username.
      *
-     * @return Benutzername
+     * @return the current username, or null if no user is logged in
      */
     public static String getUsername() {
         return username;
     }
 
     /**
-     * Gibt zurück, ob ein Benutzer eingeloggt ist.
+     * Checks whether a user is currently logged in.
      *
-     * @return true wenn eingeloggt, sonst false
+     * @return true if a user is logged in, false otherwise
      */
     public static boolean isLoggedIn() {
         return username != null;

@@ -6,11 +6,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main GUI window for selecting and managing quizzes.
+ * Provides functionality to start quizzes, create new ones, edit existing ones,
+ * and manage user settings like themes and passwords.
+ */
 public class QuizSelection extends JFrame {
     private List<JButton> buttons = new ArrayList<>();
     private JPanel panel;
     private JLabel label;
 
+    /**
+     * Constructs the QuizSelection window with menu bar and quiz list.
+     * Sets up the user interface for quiz management and selection.
+     */
     public QuizSelection() {
         super("Quiz Selection");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,7 +29,9 @@ public class QuizSelection extends JFrame {
         int maxWidth = 1000;
         int maxHeight = 800;
 
-        // Menüleiste
+        /**
+         * Menu bar setup
+         */
         JMenuBar menuBar = new JMenuBar();
         JMenu einstellungenMenu = new JMenu("Einstellungen");
 
@@ -73,6 +84,10 @@ public class QuizSelection extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Refreshes the content of the quiz selection panel.
+     * Clears all existing elements and rebuilds the interface with current quiz files.
+     */
     public void refreshContent() {
         panel.removeAll();
         buttons.clear();
@@ -81,6 +96,10 @@ public class QuizSelection extends JFrame {
         panel.repaint();
     }
 
+    /**
+     * Builds the main content of the quiz selection interface.
+     * Scans for quiz files and creates buttons for available quizzes.
+     */
     private void baueInhalt() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -140,6 +159,10 @@ public class QuizSelection extends JFrame {
         buttons.add(bearbeitenButton);
     }
 
+    /**
+     * Updates font sizes based on current window width.
+     * Scales fonts proportionally to maintain readability at different window sizes.
+     */
     private void aktualisiereFonts() {
         int breite = getWidth();
         float faktor = breite / 500.0f;

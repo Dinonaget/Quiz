@@ -5,81 +5,86 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Die Klasse {@code QuizErstellen} verwaltet eine Liste von Fragen und bietet
- * Methoden zum Speichern und Laden der Fragen in/aus einer Datei.
+ * The QuizErstellen class manages a list of questions and provides
+ * methods for saving and loading questions to/from a file.
  *
- * Die Fragen werden im Verzeichnis {@code C:/temp/Quiz} gespeichert.
+ * Questions are stored in the directory C:/temp/Quiz.
  */
 public class QuizErstellen {
+    /** List to store all questions in the quiz */
     private List<Questions> questionList = new ArrayList<>();
 
     /**
-     * Fügt eine neue Frage zur internen Liste hinzu.
+     * Adds a new question to the internal list.
      *
-     * @param question Die hinzuzufügende Frage
+     * @param question The question to be added
      */
     public void addQuestion(Questions question) {
         questionList.add(question);
     }
 
     /**
-     * Gibt die Liste aller gespeicherten Fragen zurück.
+     * Returns the list of all stored questions.
      *
-     * @return Liste von {@code Questions}
+     * @return List of Questions objects
      */
     public List<Questions> getQuestions() {
         return questionList;
     }
 
     /**
-     * Speichert alle Fragen in eine Datei im Verzeichnis {@code C:/temp/Quiz}.
-     * Jede Frage wird im Anfügemodus gespeichert.
+     * Saves all questions to a file in the C:/temp/Quiz directory.
+     * Each question is saved in append mode.
      *
-     * @param filename Der Dateiname (z. B. "fragen.txt")
-     * @throws IOException Falls beim Schreiben ein Fehler auftritt
+     * @param filename The filename (e.g., "questions.txt")
+     * @throws IOException If an error occurs while writing
      */
     public void saveQuiz(String filename) throws IOException {
+        // Iterate through all questions and save each one to file
         for (Questions frage : questionList) {
             frage.writeToFile(filename);
         }
     }
 
     /**
-     * Lädt alle Fragen aus einer Datei im Verzeichnis {@code C:/temp/Quiz}.
-     * Die Datei muss im passenden Format (6 Zeilen pro Frage) vorliegen.
+     * Loads all questions from a file in the C:/temp/Quiz directory.
+     * The file must be in the correct format (6 lines per question).
      *
-     * @param filename Der Dateiname (z. B. "fragen.txt")
-     * @throws IOException Falls beim Lesen ein Fehler auftritt
+     * @param filename The filename (e.g., "questions.txt")
+     * @throws IOException If an error occurs while reading
      */
     public void loadQuiz(String filename) throws IOException {
+        // Clear existing questions before loading new ones
         questionList.clear();
 
+        // Construct full file path
         String dirPath = "C:/temp/Quiz";
         String fullPath = dirPath + "/" + filename;
 
+        // Read file using BufferedReader with try-with-resources
         try (BufferedReader reader = new BufferedReader(new FileReader(fullPath))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Zeile 1: ID-Zeile lesen (optional verwendbar, aktuell ignoriert)
+                // Line 1: Read ID line (optional usage, currently ignored)
                 String idLine = line;
                 if (!idLine.startsWith("ID:")) {
-                    throw new IOException("Unerwartetes Dateiformat: ID-Zeile fehlt.");
+                    throw new IOException("Unexpected file format: ID line missing.");
                 }
 
-                // Zeile 2: Frage
+                // Line 2: Question text
                 String question = reader.readLine();
-                if (question == null) throw new IOException("Fehlende Frage nach ID-Zeile.");
+                if (question == null) throw new IOException("Missing question after ID line.");
 
-                // Zeile 3–6: Antworten
+                // Lines 3-6: Answer options
                 String[] answers = new String[4];
                 for (int i = 0; i < 4; i++) {
                     answers[i] = reader.readLine();
                 }
 
-                // Zeile 7: Richtiger Index
+                // Line 7: Correct answer index
                 int correctIndex = Integer.parseInt(reader.readLine());
 
-                // Neue Question erstellen (ID ignorieren, weil Questions-ID automatisch vergeben wird)
+                // Create new Question object (ignoring ID since Questions class auto-generates ID)
                 Questions q = new Questions(question, answers, correctIndex);
                 questionList.add(q);
             }
