@@ -22,7 +22,7 @@ public class NeuesPasswort extends JFrame {
     public NeuesPasswort() {
         setTitle("Passwort zurücksetzen");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 300);
+        setSize(500, 400);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
 
