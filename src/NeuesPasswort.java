@@ -1,5 +1,7 @@
 package src;
 
+import sun.rmi.runtime.Log;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
@@ -134,7 +136,7 @@ public class NeuesPasswort extends JFrame {
 
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Passwort erfolgreich geändert.");
-                    new QuizSelection();
+                    new LoginGUI();
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Sicherheitsantwort falsch oder Benutzer nicht gefunden.");
@@ -221,7 +223,7 @@ public class NeuesPasswort extends JFrame {
 
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Passwort erfolgreich geändert.");
-                    new QuizSelection();
+                    new LoginGUI();
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Fehler: Benutzer nicht gefunden.");

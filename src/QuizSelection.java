@@ -153,7 +153,7 @@ public class QuizSelection extends JFrame {
 
         JButton bearbeitenButton = new JButton("Quiz bearbeiten");
         bearbeitenButton.setToolTipText("Öffnet das Fenster zum Bearbeiten eines Quiz");
-        bearbeitenButton.addActionListener(e -> new BearbeitenGUI());
+        bearbeitenButton.addActionListener(e -> new BearbeitenGUI(this));
         gbc.gridy = row++;
         panel.add(bearbeitenButton, gbc);
         buttons.add(bearbeitenButton);

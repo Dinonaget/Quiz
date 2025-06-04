@@ -162,7 +162,7 @@ public class Profil_ErstellenGUI extends JFrame {
 
             try {
                 writeUser("C:/temp/Quiz/users.txt", username, encryptedPassword, question, encryptedAnswer);
-                new QuizSelection();
+                new LoginGUI();
                 dispose();
             } catch (IOException ex) {
                 ex.printStackTrace();

@@ -41,6 +41,9 @@ public class BearbeitenGUI extends JFrame {
     /** Name of the currently loaded quiz file */
     private String currentQuizFile;
 
+    /** Reference to the parent QuizSelection GUI */
+    private QuizSelection parent;
+
     /** Labels for dynamic font size adjustment */
     private JLabel quizSelectLabel;
     private JLabel questionSelectLabel;
@@ -53,8 +56,11 @@ public class BearbeitenGUI extends JFrame {
 
     /**
      * Constructor that initializes the GUI components and sets up the layout.
+     *
+     * @param parent The parent QuizSelection window to refresh after saving or deleting.
      */
-    public BearbeitenGUI() {
+    public BearbeitenGUI(QuizSelection parent) {
+        this.parent = parent;
         setTitle("Quiz bearbeiten");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
@@ -331,6 +337,14 @@ public class BearbeitenGUI extends JFrame {
             }
             radioGroup.clearSelection();
             JOptionPane.showMessageDialog(this, "Quiz erfolgreich gelöscht.");
+
+            // Close the current BearbeitenGUI
+            this.dispose();
+
+            // Refresh the QuizSelection GUI
+            if (parent != null) {
+                parent.refreshContent();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "Fehler beim Löschen des Quiz.");
         }
