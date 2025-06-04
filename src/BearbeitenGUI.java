@@ -63,7 +63,7 @@ public class BearbeitenGUI extends JFrame {
         this.parent = parent;
         setTitle("Quiz bearbeiten");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1200, 600);
         setLocationRelativeTo(null);
 
         // Create main panel with GridBagLayout for flexible component arrangement
