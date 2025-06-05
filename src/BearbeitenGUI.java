@@ -214,16 +214,25 @@ public class BearbeitenGUI extends JFrame {
     }
 
     /**
-     * Loads all quiz files from the quiz directory and populates the quiz selection dropdown.
+     * Loads all quiz files from the quiz directory and populates the quiz selection dropdown (User dependant).
      */
     private void loadQuizFiles() {
+        String currentUser = Session.getUsername();
+        if (currentUser == null) {
+            JOptionPane.showMessageDialog(this, "Kein Benutzer angemeldet.");
+            return;
+        }
+
         File quizDir = new File("C:/temp/Quiz");
-        File[] files = quizDir.listFiles(new java.io.FilenameFilter() {
+        File[] files = quizDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".txt");
+                // Akzeptiere nur Dateien, die auf den Benutzer passen
+                return name.endsWith(".txt") && name.contains("." + currentUser + ".");
             }
         });
+
+        quizSelect.removeAllItems(); // Leeren, bevor neue Einträge geladen werden
 
         if (files != null) {
             for (File file : files) {
@@ -231,6 +240,7 @@ public class BearbeitenGUI extends JFrame {
             }
         }
     }
+
 
     /**
      * Loads all questions from the selected quiz file and populates the question dropdown.
