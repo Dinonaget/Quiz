@@ -223,7 +223,7 @@ public class NeuesPasswort extends JFrame {
 
                 if (success) {
                     JOptionPane.showMessageDialog(this, "Passwort erfolgreich geändert.");
-                    new LoginGUI();
+                    new QuizSelection();
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Fehler: Benutzer nicht gefunden.");
